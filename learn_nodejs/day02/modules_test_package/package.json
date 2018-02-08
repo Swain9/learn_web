@@ -1,0 +1,8 @@
+{
+  "name": "modules_test_package",
+  "version": "0.0.1",
+  "main": "modules_test.js",
+  "dependencies": {
+    
+  }
+}
