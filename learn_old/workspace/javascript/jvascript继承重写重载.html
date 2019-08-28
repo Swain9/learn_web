@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>javascript继承重写重载</title>
+    <script>
+        //声明一个Persons对象，有names,age属性
+        var Persons = function (names, age) {
+            this.names = names;
+            this.age = age;
+            this.alertPer = function () {
+                alert(this.names + " " + this.age);
+            }
+        }  //等于  function Person(name,age){}
+
+        //声明一个People对象，有sex属性
+        function People(sex) {
+            this.sex = sex;
+        }
+        //声明per并初始化
+        var per = new Persons("张三", 20);
+        //模拟继承
+        //将per传给People的原型，那么所有用People声明的对象都有per的属性和方法
+        People.prototype = per;
+        var peo = new People("男");
+
+        //模拟重写
+        People.prototype.alertPer = function () {
+            alert("重写: " + peo.names + " " + peo.age + " " + peo.sex);
+        }
+        alert("性别：" + per.sex);
+        alert(peo.names + " " + peo.age + " " + peo.sex);
+        peo.alertPer();
+
+        //模拟重载
+        function result() {
+            /*写法1：
+             if(arguments.length==1){
+             alert("参数数量1："+arguments[0]);
+             }else if(arguments.length==2){
+             alert("参数数量1："+arguments[0]+"\n参数数量2："+arguments[1]);
+             }else{
+             alert("请输入正常的参数");
+             }
+             */
+            //写法2:
+            var num = arguments.length;
+            switch (num) {
+                case 1:
+                    alert("参数数量1：" + arguments[0]);
+                    break;
+                case 2:
+                    alert("参数数量1：" + arguments[0] + "\n参数数量2：" + arguments[1]);
+                    break;
+                default:
+                    alert("请输入正常的参数");
+            }
+        }
+        result("你好");
+        result("你好", "他好");
+        result("你好", "他好", "大家好");
+    </script>
+</head>
+<body>
+
+</body>
+</html>

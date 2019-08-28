@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Javascript原型</title>
+    <script>
+        /*
+         function getMax(arr){
+         var maxNum = arr[0];
+         for(var i = 1;i<arr.length;i++){
+         if(arr[i]>maxNum) {
+         maxNum = arr[i];
+         }
+         }
+         return maxNum;
+         }
+         var arrNums = [12,56,43,5,18,98,31,4];
+         var theMax = getMax(arrNums);
+         alert(theMax);
+         */
+
+        /*
+         //将上面的方法用原型来定义,prototype的用处：第三方扩展类库，一般不用
+         //给Array类添加getMax()方法,返回值maxNum
+         Array.prototype.getMax= function () {
+         var maxNum = this[0];
+         for(var i = 1;i<this.length;i++){
+         if(this[i]>maxNum) {
+         maxNum = this[i];
+         }
+         }
+         return maxNum;
+         }
+         //给Array类添加一个静态属性mm
+         Array.prototype.mm = "你好";
+         var arrNums = [12,56,43,5,18,98,31,4];
+         alert(arrNums.getMax());
+         document.write(arrNums.mm);
+         */
+
+
+        function Person() {
+            var firstName = "林";
+            this.age = 9;
+        }
+        //用prototype关键字定义的属性和方法类似于java中的静态方法和属性，但又有不同之处，java中，直接类名.属性调用，
+        // javascript 必须var 对象 = new 类名()  对象.属性 调用
+        //
+        Person.names = "老李";
+        Person.prototype.names = "老张";
+        Person.prototype.age = 26;
+        Person.prototype.arr = ["aa", "bb", "cc", "dd"];
+        Person.prototype.say = function () {
+            alert(this.names + "" + this.age + this.arr);
+        };
+        var pp = new Person();
+        pp.arr.push("ee");
+        document.write(pp.names + pp.age + Person.names); //静态属性和原型属性不一样
+        pp.say();
+        var pp2 = new Person();
+        pp2.arr.push("ff");
+        pp2.say();
+        pp.say();
+        alert(Person.names);
+        /*
+         //--------------------4.静态属性与静态方法----------------------------------------------------------
+         //类名.属性名或方法名定义
+         //访问也是类名.属性名或方法名
+         //不能用对象调用
+         var Person = function(){
+
+         }
+         //function Person() {}
+         //用function Person(){} 定义一个类的时候，Person.name=Person.  name关键字已经定义
+         Person.names="你好";
+         Person.age = 20;
+         Person.show=function(){
+         alert("静态方法");
+         }
+
+         alert(Person.names+","+Person.age);
+         Person.show();
+
+         var p = new Person();
+         alert(p.names);
+         */
+
+        function maolin_() {
+        }
+        maolin_.throttle()
+        maolin_.throttle = function (func, wait, options) {
+            var context, args, result;
+            var timeout = null;
+            var previous = 0;
+            if (!options) options = {};
+            var later = function () {
+                previous = options.leading === false ? 0 : new Date().getTime();
+                timeout = null;
+                result = func.apply(context, args);
+                if (!timeout) context = args = null;
+            };
+            return function () {
+                var now = new Date().getTime();
+                if (!previous && options.leading === false) previous = now;
+                var remaining = wait - (now - previous);
+                context = this;
+                args = arguments;
+                if (remaining <= 0 || remaining > wait) {
+                    if (timeout) {
+                        clearTimeout(timeout);
+                        timeout = null;
+                    }
+                    previous = now;
+                    result = func.apply(context, args);
+                    if (!timeout) context = args = null;
+                } else if (!timeout && options.trailing !== false) {
+                    timeout = setTimeout(later, remaining);
+                }
+                return result;
+            };
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

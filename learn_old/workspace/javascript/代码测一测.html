@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>代码测一测</title>
+    <script>
+        /*又犯了同样的错误了，页面没有加载完是获取不到元素的
+         var txtArray = document.getElementById("ctl00_contentHolder_grdSelectedProducts");
+         alert(txtArray);
+         */
+        function getTables() {
+
+            var txtArray = document.getElementById("ctl00_contentHolder_grdSelectedProducts");
+            var num = txtArray.rows.length - 1;
+
+            var randomMath = 0;
+            var txtInput = null;
+            var j = 0;
+            for (var i = 2; i < num + 2; i++) {
+                randomMath = parseInt(Math.random() * 100, 10);
+                if (randomMath > 75) {
+
+                }
+                j = i < 10 ? "0" + i : i;
+                txtInput = document.getElementById("ctl00_contentHolder_grdSelectedProducts_ctl" + j + "_txtShowSaleCounts");
+                txtInput.value = randomMath;
+            }
+        }
+        //获取淘宝的图片
+        function getImg() {
+            var imgSrc = 0;
+            window.open(document.getElementsByClassName("ks-overlay-content")[0].childNodes[0].src);  //html5新增
+        }
+        //批量处理云堂系统中产品的显示销售数量
+        //var f = document.getElementsByTagName("iframe")[0].contentWindow;   contentWindow获得元素的window对象
+        function getiFrame() {
+            var rangeNum = parseInt(prompt("请输入范围值", ""));
+            if (rangeNum != null && rangeNum != "" && typeof rangeNum === "number") {
+                var iframeDocument = document.getElementsByTagName("iframe")[0].contentDocument;
+                var txtArray = iframeDocument.getElementById("ctl00_contentHolder_grdSelectedProducts");
+                var num = txtArray.rows.length - 1;
+                var randomMath = 0;
+                var txtInput = null;
+                var j = 0;
+                for (var i = 2; i < num + 2; i++) {
+                    randomMath = parseInt(Math.random() * rangeNum, 10);
+                    j = i < 10 ? "0" + i : i;
+                    txtInput = iframeDocument.getElementById("ctl00_contentHolder_grdSelectedProducts_ctl" + j + "_txtShowSaleCounts");
+                    txtInput.value = randomMath;
+                }
+            }
+        }
+        function getChildList() {
+            var num = prompt("请输入","");
+            var getEleById = frammain.window.document.getElementById(num);
+            getEleById.getAttributeNode("haschildren").value = "true";
+            getEleById.click();
+        }
+    </script>
+</head>
+<body onload="getiFrame()">
+
+<iframe src="代码测一测专用.html" style="width: 50; border: 0px none;">
+
+</iframe>
+<iframe src="Dom编程.html" style="width: 50; border: 0px none;">
+
+</iframe>
+</body>
+</html>

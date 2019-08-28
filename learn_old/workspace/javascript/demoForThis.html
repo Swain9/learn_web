@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>this关键字</title>
+    <script src=""></script>
+    <script>
+        //function test() {
+            var name = "Bob";
+            var nameObj = {
+                name: "Tom",
+                showName: function () {
+                    alert(this.name);
+                },
+                waitShowName: function () {
+                    setTimeout(this.showName, 1000);
+                }
+            };
+            nameObj.waitShowName();
+        //}
+        /*
+        function test1(){
+            var someone = {
+                name: "Bob",
+                showName: function(){
+                    alert(this.name);
+                }
+            };
+
+            var other = {
+                name: "Tom",
+                showName: someone.showName
+            }
+            other.showName(); //tom
+            //var show = other.showName();
+            //show();   //tom
+        }
+        function test2(){
+            var name = "window";
+
+            var Bob = {
+                name: "Bob",
+                showName: function(){
+                    alert(this.name);
+                }
+            };
+
+            var Tom = {
+                name: "Tom",
+                showName: function(){
+                    var fun = Bob.showName;
+                    fun();             //window
+                    //Bob.showName(); //bob
+                }
+            };
+
+            Tom.showName();
+        }
+        */
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,1592 @@
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        /**
+ *    打印相关
+*/
+        @media print {
+            .notprint {
+                display: none;
+            }
+
+            .PageNext {
+                page-break-after: always;
+            }
+        }
+
+        @media screen {
+            .notprint {
+                display: inline;
+                cursor: hand;
+            }
+        }
+
+        html, legend {
+            color: #000;
+            background: #fff;
+        }
+
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        body {
+            font: 12px/1.5 "microsoft yahei", Tahoma, Helvetica, Arial, sans-serif;
+            text-align: center;
+            color: #000;
+        }
+
+        table {
+            font-size: inherit;
+            font: 100;
+        }
+
+        .clear-both {
+            clear: both;
+        }
+
+        #main {
+            text-align: left;
+            width: 63em;
+            margin: 0 auto;
+        }
+
+        table {
+            width: 100;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #858585;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .order {
+            page-break-after: always;
+        }
+
+        .print .info {
+            position: relative;
+        }
+
+        .print .info h3 {
+            font-size: 1.2em;
+        }
+
+        .print .info .prime-info {
+            float: left;
+        }
+
+        .print ul.sub-info {
+            overflow: hidden;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .print ul.sub-info li {
+            float: left;
+            padding-right: 3em;
+        }
+
+        button {
+            width: 10em;
+            height: 2em;
+            text-align: center;
+        }
+
+        th {
+            color: #000;
+            text-align: left;
+            padding: .4em .4em .4em 1.1em;
+            border-bottom: 1px solid #858585;
+            font-weight: 1;
+        }
+
+        td {
+            border-bottom: 1px solid #858585;
+            padding: .5em .8em;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        .odd td {
+            background-color: #F2F2F2;
+        }
+
+        .price {
+        }
+
+        .price li {
+            float: left;
+            margin: .5em 0;
+            min-height: 1;
+            padding-right: 2em;
+        }
+
+        .price li span {
+            float: left;
+        }
+
+        .order .col-0 {
+            width: 6em;
+        }
+
+        .order .col-1 {
+            width: 13em;
+        }
+
+        .order .col-2 {
+            width: 12em;
+        }
+
+        .order .col-3 {
+            width: 4em;
+        }
+
+        .order .col-4 {
+            width: 4em;
+        }
+
+        .order .col-5 {
+            width: 8em;
+        }
+
+        .order .col-6 {
+            width: 8em;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function clicks() {
+            window.print();
+        }
+        /*
+         nodeValue和textContent的区别,innerHTML比较好用
+         <div>你好</div>
+         div.nodeValue:空
+         div.textContent:你好
+         div.firstChild.nodeValue:你好
+         原因：你好也属于一个node,textContent是获得该node下的所有文本，包括节点
+         innerText、textContent    innerText与textContent的区别，当文本为空时，innerText是""，而textContent是undefined
+         */
+        //写法1，还有一个写法，直接获得所有h3标签和li标签的
+        function transformat() {
+            var nameInfo = document.getElementsByTagName("h3");
+            var subInfo = document.getElementsByClassName("sub-info");
+            var priceInfo = document.getElementsByClassName("price");
+            var tableInfo = document.getElementsByTagName("table");
+            var allInfo = [];
+            if (nameInfo.length == subInfo.length && nameInfo.length == priceInfo.length) {
+                var num = nameInfo.length;
+                //i
+                for (var i = 0; i < num; i++) {
+                    //获得姓名
+                    var nameString = nameInfo[i].innerHTML;
+                    //
+                    var liSubInfo = subInfo[i].getElementsByTagName("li");
+                    //获得订单提交信息
+                    var liSubString = "";
+                    //j
+                    for (var j = 0; j < liSubInfo.length; j++) {
+                        liSubString += liSubInfo[j].innerHTML + " ";
+                    }
+                    //
+                    var liPriceInfo = priceInfo[i].getElementsByTagName("li");
+                    //获得订单价格等信息
+                    var liPriceString = "";
+                    //k
+                    for (var k = 0; k < liPriceInfo.length; k++) {
+                        liPriceString += liPriceInfo[k].innerHTML + " ";
+                    }
+                    //创建json，还有一种写法 var json = {nameinfo:nameString,subinfo:liSubString,priceinfo:liPriceString}
+                    var jsonInfo = '{"nameinfo":\"' + nameString + '\", "subinfo":\"' + liSubString + '\", "priceinfo":\"' + liPriceString + '\"}';
+                    //添加到数组中
+                    allInfo.push(jsonInfo);
+                }
+            }
+            if (allInfo.length == tableInfo.length) {
+                var tableNum = allInfo.length;
+                //m
+                for (var m = 0; m < tableNum; m++) {
+                    var obj = eval("(" + allInfo[m] + ")");
+
+                    //alert(obj.nameinfo + obj.subinfo + obj.priceinfo);
+
+                    var tbody = tableInfo[m].tBodies[0];
+                    var tbodyRowNum = tbody.rows.length;
+                    //插入最后一行
+                    var priceRow = tbody.insertRow(tbodyRowNum);
+                    //插入一个单元格
+                    var priceCell = priceRow.insertCell(0);
+                    priceCell.colSpan = 6;
+                    priceCell.style.fontSize = "16px";
+                    priceCell.innerHTML = obj.priceinfo;
+
+                    //插入第一行
+                    var nameSubRow = tableInfo[m].insertRow(0);
+                    //插入一个单元格
+                    var nameSubCell = nameSubRow.insertCell(0);
+                    nameSubCell.colSpan = 6;
+                    nameSubCell.style.fontSize = "16px";
+                    nameSubCell.innerHTML = obj.nameinfo + " | " + obj.subinfo;
+
+                    //alert(tbodyRowNum);
+                }
+            }
+            for (var d = allInfo.length - 1; d >= 0; d--) {
+                nameInfo[d].parentNode.removeChild(nameInfo[d]);
+                subInfo[d].parentNode.removeChild(subInfo[d]);
+                priceInfo[d].parentNode.removeChild(priceInfo[d]);
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+<div id="divContent" style="text-align: center; width: 700px; margin: 0 auto;">
+
+    <input type="button" value="改变" class="btn btn-primary notprint" id="btnChange" onclick="transformat()">
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">杨燕辉</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-19 18:15</li>
+                <li><span>订单编号： </span>201605195832261</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>92890</td>
+                <td>李锦记蒸鱼豉油410ml</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>10421</td>
+                <td>金浩茶籽油橄榄调和油5L 118元/瓶</td>
+                <td></td>
+                <td>1</td>
+                <td>108.00</td>
+                <td>108.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>118.00</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>118.00</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">黄祖春</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-19 18:45</li>
+                <li><span>订单编号： </span>201605197087292</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>78606</td>
+                <td>橄榄精油去屑修复洗发水500g 妆点一生</td>
+                <td></td>
+                <td>2</td>
+                <td>26.80</td>
+                <td>53.60</td>
+            </tr>
+            <tr>
+                <td>72712</td>
+                <td>海马香水滋润保湿沐浴露 2kg 妆点一生</td>
+                <td></td>
+                <td>2</td>
+                <td>24.80</td>
+                <td>49.60</td>
+            </tr>
+            <tr>
+                <td>81762</td>
+                <td>潘婷乳液修复去屑洗发露400ml-</td>
+                <td></td>
+                <td>2</td>
+                <td>34.00</td>
+                <td>68.00</td>
+            </tr>
+            <tr>
+                <td>62244</td>
+                <td>玉兰油沐浴乳舒爽兰花720ml-</td>
+                <td></td>
+                <td>2</td>
+                <td>35.00</td>
+                <td>70.00</td>
+            </tr>
+            <tr>
+                <td>06846</td>
+                <td>玉兰油亮爽珍珠沐浴乳720ml-</td>
+                <td></td>
+                <td>2</td>
+                <td>35.00</td>
+                <td>70.00</td>
+            </tr>
+            <tr>
+                <td>56680</td>
+                <td>汰渍洁净熏香洗衣液2kg-</td>
+                <td></td>
+                <td>2</td>
+                <td>39.00</td>
+                <td>78.00</td>
+            </tr>
+            <tr>
+                <td>51777</td>
+                <td>蓝月亮自然清香型洗衣液3kg-</td>
+                <td></td>
+                <td>5</td>
+                <td>48.00</td>
+                <td>240.00</td>
+            </tr>
+            <tr>
+                <td>08594</td>
+                <td>奥妙水清莲香洗衣液2kg-</td>
+                <td></td>
+                <td>5</td>
+                <td>33.50</td>
+                <td>167.50</td>
+            </tr>
+            <tr>
+                <td>97794</td>
+                <td>奥妙金纺7合1纯净温和洗衣液2kg</td>
+                <td></td>
+                <td>5</td>
+                <td>25.00</td>
+                <td>125.00</td>
+            </tr>
+            <tr>
+                <td>97295</td>
+                <td>黑人超白矿物盐牙膏140g-</td>
+                <td></td>
+                <td>5</td>
+                <td>13.50</td>
+                <td>67.50</td>
+            </tr>
+            <tr>
+                <td>27612</td>
+                <td>高露洁健白防蛀清爽薄荷牙膏200g-</td>
+                <td></td>
+                <td>2</td>
+                <td>17.00</td>
+                <td>34.00</td>
+            </tr>
+            <tr>
+                <td>53025</td>
+                <td>云南白药留兰香型牙膏180g-</td>
+                <td></td>
+                <td>2</td>
+                <td>31.50</td>
+                <td>63.00</td>
+            </tr>
+            <tr>
+                <td>92391</td>
+                <td>云南白药清爽薄荷150g-</td>
+                <td></td>
+                <td>2</td>
+                <td>28.00</td>
+                <td>56.00</td>
+            </tr>
+            <tr>
+                <td>02861</td>
+                <td>六神驱蚊花露水80ml-</td>
+                <td></td>
+                <td>5</td>
+                <td>16.00</td>
+                <td>80.00</td>
+            </tr>
+            <tr>
+                <td>67309</td>
+                <td>六神止痒花露水180ml-</td>
+                <td></td>
+                <td>5</td>
+                <td>18.50</td>
+                <td>92.50</td>
+            </tr>
+            <tr>
+                <td>51116</td>
+                <td>玫瑰舒润沐浴露 2kg大瓶 妆点一生</td>
+                <td></td>
+                <td>2</td>
+                <td>24.80</td>
+                <td>49.60</td>
+            </tr>
+            <tr>
+                <td>75450</td>
+                <td>ABC卫生巾日用用 蓝芯2迅爽8.5元/包/8片装</td>
+                <td></td>
+                <td>5</td>
+                <td>8.50</td>
+                <td>42.50</td>
+            </tr>
+            <tr>
+                <td>96715</td>
+                <td>ABC卫生巾夜用 蓝芯2迅爽10元/包8片装</td>
+                <td></td>
+                <td>5</td>
+                <td>10.00</td>
+                <td>50.00</td>
+            </tr>
+            <tr>
+                <td>96715</td>
+                <td>一帆7878六卷垃圾袋-</td>
+                <td></td>
+                <td>3</td>
+                <td>14.80</td>
+                <td>44.40</td>
+            </tr>
+            <tr>
+                <td>25616</td>
+                <td>一帆7879三合一保鲜袋-</td>
+                <td></td>
+                <td>2</td>
+                <td>14.90</td>
+                <td>29.80</td>
+            </tr>
+            <tr>
+                <td>32597</td>
+                <td>韶能本色 竹纤维不漂白本色纸无尘无屑 有芯卫生卷纸1800克10卷</td>
+                <td></td>
+                <td>10</td>
+                <td>45.00</td>
+                <td>450.00</td>
+            </tr>
+            <tr>
+                <td>21799</td>
+                <td>韶能本色 竹纤维不漂白本色纸无尘无屑 120抽3包装 抽取式软抽 单提</td>
+                <td></td>
+                <td>10</td>
+                <td>14.80</td>
+                <td>148.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>2129.00</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>2129.00</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">李彩云</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-19 19:22</li>
+                <li><span>订单编号： </span>201605190615056</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>75868</td>
+                <td>金健 纯正菜籽油 5L</td>
+                <td></td>
+                <td>2</td>
+                <td>66.00</td>
+                <td>132.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>132.00</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>132.00</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">杨</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-19 19:26</li>
+                <li><span>订单编号： </span>201605199578542</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>83510</td>
+                <td>白猫漂白彩漂水700g-</td>
+                <td></td>
+                <td>3</td>
+                <td>7.00</td>
+                <td>21.00</td>
+            </tr>
+            <tr>
+                <td>96715</td>
+                <td>一帆7878六卷垃圾袋-</td>
+                <td></td>
+                <td>1</td>
+                <td>14.80</td>
+                <td>14.80</td>
+            </tr>
+            <tr>
+                <td>87656</td>
+                <td>好美丽6109 15”PVC防滑裙衣架5个装-</td>
+                <td></td>
+                <td>3</td>
+                <td>8.00</td>
+                <td>24.00</td>
+            </tr>
+            <tr>
+                <td>41977</td>
+                <td>韶能本色 竹纤维不漂白本色纸无尘无屑 有芯卫生卷纸12卷促销装 单提</td>
+                <td></td>
+                <td>2</td>
+                <td>30.00</td>
+                <td>60.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>119.80</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>119.80</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">李嘉亦</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-19 21:18</li>
+                <li><span>订单编号： </span>201605198703954</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>62244</td>
+                <td>玉兰油沐浴乳舒爽兰花720ml-</td>
+                <td></td>
+                <td>1</td>
+                <td>35.00</td>
+                <td>35.00</td>
+            </tr>
+            <tr>
+                <td>98124</td>
+                <td>汰渍净白去渍1.36kg-</td>
+                <td></td>
+                <td>3</td>
+                <td>11.00</td>
+                <td>33.00</td>
+            </tr>
+            <tr>
+                <td>92230</td>
+                <td>三杰 北京 鸡蛋面 900g包</td>
+                <td></td>
+                <td>9</td>
+                <td>6.80</td>
+                <td>61.20</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>129.20</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>129.20</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">波波</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-20 04:38</li>
+                <li><span>订单编号： </span>201605209046565</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>23538</td>
+                <td>土牌野山椒土鸡爪100g</td>
+                <td></td>
+                <td>1</td>
+                <td>4.00</td>
+                <td>4.00</td>
+            </tr>
+            <tr>
+                <td>17974</td>
+                <td>傻小子精品香干70g</td>
+                <td></td>
+                <td>1</td>
+                <td>2.50</td>
+                <td>2.50</td>
+            </tr>
+            <tr>
+                <td>44473</td>
+                <td>李锦记草菇老抽500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>71633</td>
+                <td>雪天加碘盐</td>
+                <td></td>
+                <td>2</td>
+                <td>2.50</td>
+                <td>5.00</td>
+            </tr>
+            <tr>
+                <td>25285</td>
+                <td>长康麻油380ml</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>98454</td>
+                <td>广合腐乳335g</td>
+                <td></td>
+                <td>1</td>
+                <td>6.00</td>
+                <td>6.00</td>
+            </tr>
+            <tr>
+                <td>11581</td>
+                <td>大宝 水凝保湿精华乳液 75ml</td>
+                <td></td>
+                <td>1</td>
+                <td>28.50</td>
+                <td>28.50</td>
+            </tr>
+            <tr>
+                <td>63492</td>
+                <td>东北 松花江 珍珠米 10kg袋</td>
+                <td></td>
+                <td>1</td>
+                <td>65.00</td>
+                <td>65.00</td>
+            </tr>
+            <tr>
+                <td>85748</td>
+                <td>【嘉品嘉】荷兰薯仔饼进口休闲零食品饼干礼盒 杂锦装</td>
+                <td></td>
+                <td>1</td>
+                <td>32.00</td>
+                <td>32.00</td>
+            </tr>
+            <tr>
+                <td>49039</td>
+                <td>百醇 抹茶莫斯 48g每盒</td>
+                <td></td>
+                <td>1</td>
+                <td>6.50</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>48709</td>
+                <td>印尼丽芝士那巴提纳宝帝奶酪芝士威化饼干58g</td>
+                <td></td>
+                <td>2</td>
+                <td>2.50</td>
+                <td>5.00</td>
+            </tr>
+            <tr>
+                <td>69555</td>
+                <td>至正榴莲糖特浓榴莲味 100克50袋件休闲糖果</td>
+                <td></td>
+                <td>1</td>
+                <td>6.00</td>
+                <td>6.00</td>
+            </tr>
+            <tr>
+                <td>85917</td>
+                <td>乐事薯片40g</td>
+                <td></td>
+                <td>1</td>
+                <td>3.20</td>
+                <td>3.20</td>
+            </tr>
+            <tr>
+                <td>11001</td>
+                <td>喜之郎美好时光海苔3g 2.5</td>
+                <td></td>
+                <td>2</td>
+                <td>2.50</td>
+                <td>5.00</td>
+            </tr>
+            <tr>
+                <td>99871</td>
+                <td>好啊优6926健康饮杯-</td>
+                <td></td>
+                <td>1</td>
+                <td>6.50</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>03030</td>
+                <td>湘聚食客香辣手撕鱼180g</td>
+                <td></td>
+                <td>1</td>
+                <td>8.80</td>
+                <td>8.80</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>201.00</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>201.00</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">谭细妹</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-20 06:32</li>
+                <li><span>订单编号： </span>201605206429795</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>78936</td>
+                <td>长康陈醋500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>4.00</td>
+                <td>4.00</td>
+            </tr>
+            <tr>
+                <td>78936</td>
+                <td>长康白醋500ml</td>
+                <td></td>
+                <td>2</td>
+                <td>3.50</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>72712</td>
+                <td>白猫冷水速洁2.5kg-</td>
+                <td></td>
+                <td>1</td>
+                <td>28.00</td>
+                <td>28.00</td>
+            </tr>
+            <tr>
+                <td>26034</td>
+                <td>三杰 兰州 拉面900g包</td>
+                <td></td>
+                <td>3</td>
+                <td>6.80</td>
+                <td>20.40</td>
+            </tr>
+            <tr>
+                <td>61914</td>
+                <td>三杰 山西 刀削面 900g包</td>
+                <td></td>
+                <td>4</td>
+                <td>6.80</td>
+                <td>27.20</td>
+            </tr>
+            <tr>
+                <td>70634</td>
+                <td>伊利 安慕希 利乐钻金属包 205mlx12瓶一件</td>
+                <td></td>
+                <td>1</td>
+                <td>62.00</td>
+                <td>62.00</td>
+            </tr>
+            <tr>
+                <td>96715</td>
+                <td>ABC卫生巾夜用 蓝芯2迅爽10元/包8片装</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>75450</td>
+                <td>洁伶全程护理卫生巾系列8元/包</td>
+                <td></td>
+                <td>1</td>
+                <td>8.00</td>
+                <td>8.00</td>
+            </tr>
+            <tr>
+                <td>16565</td>
+                <td>七度空间少女系列 8元/包</td>
+                <td></td>
+                <td>2</td>
+                <td>8.00</td>
+                <td>16.00</td>
+            </tr>
+            <tr>
+                <td>30849</td>
+                <td>韶能本色 竹纤维不漂白本色纸无尘无屑 66抽5包装 抽取式软抽 单提</td>
+                <td></td>
+                <td>1</td>
+                <td>13.80</td>
+                <td>13.80</td>
+            </tr>
+            <tr>
+                <td>75450</td>
+                <td>韶能本色 竹纤维不漂白本色纸无尘无屑 小包式 妇婴专用手帕纸 单条</td>
+                <td></td>
+                <td>1</td>
+                <td>6.80</td>
+                <td>6.80</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>203.20</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>203.20</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">曾海强</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-20 15:13</li>
+                <li><span>订单编号： </span>201605200308743</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>03690</td>
+                <td>海天金标生抽王500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>55601</td>
+                <td>海天上等蚝油 700g</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>92890</td>
+                <td>李锦记蒸鱼豉油410ml</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>19722</td>
+                <td>五香蒸肉粉200g</td>
+                <td></td>
+                <td>2</td>
+                <td>3.00</td>
+                <td>6.00</td>
+            </tr>
+            <tr>
+                <td>71633</td>
+                <td>雪天加碘盐</td>
+                <td></td>
+                <td>1</td>
+                <td>2.50</td>
+                <td>2.50</td>
+            </tr>
+            <tr>
+                <td>25285</td>
+                <td>长康麻油380ml</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>62574</td>
+                <td>家乐鸡精调味料420g</td>
+                <td></td>
+                <td>1</td>
+                <td>14.00</td>
+                <td>14.00</td>
+            </tr>
+            <tr>
+                <td>98454</td>
+                <td>广合腐乳335g</td>
+                <td></td>
+                <td>1</td>
+                <td>6.00</td>
+                <td>6.00</td>
+            </tr>
+            <tr>
+                <td>59088</td>
+                <td>陶华碧老干妈280g</td>
+                <td></td>
+                <td>1</td>
+                <td>8.50</td>
+                <td>8.50</td>
+            </tr>
+            <tr>
+                <td>78936</td>
+                <td>长康陈醋500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>4.00</td>
+                <td>4.00</td>
+            </tr>
+            <tr>
+                <td>78936</td>
+                <td>长康白醋500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>3.50</td>
+                <td>3.50</td>
+            </tr>
+            <tr>
+                <td>44804</td>
+                <td>惠之恋土榨乡里菜籽油5L（图片仅供参考）</td>
+                <td></td>
+                <td>1</td>
+                <td>98.00</td>
+                <td>98.00</td>
+            </tr>
+            <tr>
+                <td>61745</td>
+                <td>星盛 星湘米哥 大米 15kg袋</td>
+                <td></td>
+                <td>2</td>
+                <td>75.00</td>
+                <td>150.00</td>
+            </tr>
+            <tr>
+                <td>97794</td>
+                <td>五谷杂粮 黄豆 400g包</td>
+                <td></td>
+                <td>2</td>
+                <td>6.00</td>
+                <td>12.00</td>
+            </tr>
+            <tr>
+                <td>12080</td>
+                <td>五谷杂粮 绿豆 300g包</td>
+                <td></td>
+                <td>2</td>
+                <td>6.00</td>
+                <td>12.00</td>
+            </tr>
+            <tr>
+                <td>03030</td>
+                <td>五谷杂粮 红豆 300g包</td>
+                <td></td>
+                <td>1</td>
+                <td>6.50</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>61914</td>
+                <td>五谷杂粮 黑豆 250g包</td>
+                <td></td>
+                <td>1</td>
+                <td>6.50</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>96047</td>
+                <td>五谷杂粮 黑芸豆 440g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.50</td>
+                <td>7.50</td>
+            </tr>
+            <tr>
+                <td>81432</td>
+                <td>五谷杂粮 白芸豆 400g包</td>
+                <td></td>
+                <td>1</td>
+                <td>9.00</td>
+                <td>9.00</td>
+            </tr>
+            <tr>
+                <td>47630</td>
+                <td>五谷杂粮 斑马豆 500g包</td>
+                <td></td>
+                <td>1</td>
+                <td>9.00</td>
+                <td>9.00</td>
+            </tr>
+            <tr>
+                <td>12080</td>
+                <td>五谷杂粮 红腰豆 250g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.50</td>
+                <td>7.50</td>
+            </tr>
+            <tr>
+                <td>06516</td>
+                <td>五谷杂粮 玉米糁 480g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>22878</td>
+                <td>五谷杂粮 大薏米 420g包</td>
+                <td></td>
+                <td>1</td>
+                <td>8.50</td>
+                <td>8.50</td>
+            </tr>
+            <tr>
+                <td>81762</td>
+                <td>五谷杂粮 小薏米 260g包</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>04769</td>
+                <td>五谷杂粮 小米 300g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>90483</td>
+                <td>五谷杂粮 大黄米 300g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>11750</td>
+                <td>五谷杂粮 养生八宝米 500g包</td>
+                <td></td>
+                <td>1</td>
+                <td>8.00</td>
+                <td>8.00</td>
+            </tr>
+            <tr>
+                <td>51447</td>
+                <td>五谷杂粮 黑米 500g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.50</td>
+                <td>7.50</td>
+            </tr>
+            <tr>
+                <td>54933</td>
+                <td>五谷杂粮 西米 340g包</td>
+                <td></td>
+                <td>1</td>
+                <td>6.50</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>56680</td>
+                <td>五谷杂粮 燕麦米 280g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>03030</td>
+                <td>五谷杂粮 燕麦片 320g包</td>
+                <td></td>
+                <td>1</td>
+                <td>6.00</td>
+                <td>6.00</td>
+            </tr>
+            <tr>
+                <td>10333</td>
+                <td>五谷杂粮 红米 280g包</td>
+                <td></td>
+                <td>1</td>
+                <td>6.50</td>
+                <td>6.50</td>
+            </tr>
+            <tr>
+                <td>56680</td>
+                <td>五谷杂粮 荞麦米 450g</td>
+                <td></td>
+                <td>1</td>
+                <td>8.00</td>
+                <td>8.00</td>
+            </tr>
+            <tr>
+                <td>81762</td>
+                <td>五谷杂粮 糙米 490g包</td>
+                <td></td>
+                <td>1</td>
+                <td>8.00</td>
+                <td>8.00</td>
+            </tr>
+            <tr>
+                <td>22878</td>
+                <td>五谷杂粮 高粱米 500g包</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>42396</td>
+                <td>五谷杂粮 莲子 340g包</td>
+                <td></td>
+                <td>1</td>
+                <td>30.00</td>
+                <td>30.00</td>
+            </tr>
+            <tr>
+                <td>40649</td>
+                <td>五谷杂粮 白芝麻 220g包</td>
+                <td></td>
+                <td>1</td>
+                <td>15.00</td>
+                <td>15.00</td>
+            </tr>
+            <tr>
+                <td>92560</td>
+                <td>五谷杂粮 黑芝麻 220g包</td>
+                <td></td>
+                <td>1</td>
+                <td>16.00</td>
+                <td>16.00</td>
+            </tr>
+            <tr>
+                <td>76198</td>
+                <td>五谷杂粮 花生米(大) 370g包</td>
+                <td></td>
+                <td>1</td>
+                <td>10.00</td>
+                <td>10.00</td>
+            </tr>
+            <tr>
+                <td>40649</td>
+                <td>宁波特产 水磨糯米粉 850g包</td>
+                <td></td>
+                <td>2</td>
+                <td>14.00</td>
+                <td>28.00</td>
+            </tr>
+            <tr>
+                <td>21131</td>
+                <td>大西南 玉米 自发馒头粉 2500g包</td>
+                <td></td>
+                <td>2</td>
+                <td>25.00</td>
+                <td>50.00</td>
+            </tr>
+            <tr>
+                <td>75868</td>
+                <td>金健 纯正菜籽油 5L</td>
+                <td></td>
+                <td>2</td>
+                <td>66.00</td>
+                <td>132.00</td>
+            </tr>
+            <tr>
+                <td>33426</td>
+                <td>泰和香米15kg</td>
+                <td></td>
+                <td>1</td>
+                <td>95.00</td>
+                <td>95.00</td>
+            </tr>
+            <tr>
+                <td>28192</td>
+                <td>香粘香米15kg</td>
+                <td></td>
+                <td>1</td>
+                <td>92.00</td>
+                <td>92.00</td>
+            </tr>
+            <tr>
+                <td>41977</td>
+                <td>韶能本色 竹纤维不漂白本色纸无尘无屑 有芯卫生卷纸12卷促销装 单提</td>
+                <td></td>
+                <td>1</td>
+                <td>30.00</td>
+                <td>30.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>998.50</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>998.50</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">徐水平</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-20 18:45</li>
+                <li><span>订单编号： </span>201605208685500</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>71633</td>
+                <td>雪天加碘盐</td>
+                <td></td>
+                <td>10</td>
+                <td>2.50</td>
+                <td>25.00</td>
+            </tr>
+            <tr>
+                <td>97295</td>
+                <td>六神驱蚊花露水95ml-</td>
+                <td></td>
+                <td>1</td>
+                <td>8.00</td>
+                <td>8.00</td>
+            </tr>
+            <tr>
+                <td>88824</td>
+                <td>山润100纯正菜籽油64元/瓶</td>
+                <td></td>
+                <td>2</td>
+                <td>64.00</td>
+                <td>128.00</td>
+            </tr>
+            <tr>
+                <td>42477</td>
+                <td>裕鑫香大米15kg</td>
+                <td></td>
+                <td>2</td>
+                <td>88.00</td>
+                <td>176.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>337.00</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>337.00</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <div class="order print">
+        <div class="info">
+            <div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+                <h3 style="font-weight: normal">朱英</h3>
+                <p></p></div>
+            <ul class="sub-info">
+                <li><span>生成时间： </span>2016-05-20 21:15</li>
+                <li><span>订单编号： </span>201605209143300</li>
+            </ul>
+            <br class="clear"></div>
+        <table>
+            <colgroup>
+                <col class="col-0">
+                <col class="col-1">
+                <col class="col-2">
+                <col class="col-3">
+                <col class="col-4">
+                <col class="col-5">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>货号</th>
+                <th>商品名称</th>
+                <th>规格</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>总价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>03690</td>
+                <td>海天金标生抽王500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>7.00</td>
+                <td>7.00</td>
+            </tr>
+            <tr>
+                <td>17974</td>
+                <td>加加面条鲜500ml</td>
+                <td></td>
+                <td>1</td>
+                <td>8.00</td>
+                <td>8.00</td>
+            </tr>
+            <tr>
+                <td>71633</td>
+                <td>雪天加碘盐</td>
+                <td></td>
+                <td>1</td>
+                <td>2.50</td>
+                <td>2.50</td>
+            </tr>
+            <tr>
+                <td>59088</td>
+                <td>陶华碧老干妈280g</td>
+                <td></td>
+                <td>1</td>
+                <td>8.50</td>
+                <td>8.50</td>
+            </tr>
+            <tr>
+                <td>87326</td>
+                <td>帮洁厕净（清香）600g-</td>
+                <td></td>
+                <td>2</td>
+                <td>6.00</td>
+                <td>12.00</td>
+            </tr>
+            <tr>
+                <td>42227</td>
+                <td>章陵 香菇风味面条 1kg</td>
+                <td></td>
+                <td>2</td>
+                <td>7.00</td>
+                <td>14.00</td>
+            </tr>
+            <tr>
+                <td>40649</td>
+                <td>五谷杂粮 白芝麻 220g包</td>
+                <td></td>
+                <td>1</td>
+                <td>15.00</td>
+                <td>15.00</td>
+            </tr>
+            <tr>
+                <td>13489</td>
+                <td>王老吉 凉茶 310ml x24罐一件</td>
+                <td></td>
+                <td>1</td>
+                <td>78.00</td>
+                <td>78.00</td>
+            </tr>
+            <tr>
+                <td>73791</td>
+                <td>六个核桃 240ml*12</td>
+                <td></td>
+                <td>1</td>
+                <td>55.00</td>
+                <td>55.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="price">
+            <li><span>商品总价： </span>200.00</li>
+            <li><span>运费： </span>0.00</li>
+            <li><span>管理员手工减价：</span>0.00</li>
+            <li><span>实付金额：</span>200.00</li>
+        </ul>
+        <br class="clear"><br><br></div>
+    <input type="button" value="确认打印" class="btn btn-primary notprint" id="printBtn" onclick="clicks()">
+</div>
+
+
+</body>
+</html>

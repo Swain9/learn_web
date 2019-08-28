@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>javascript控制下载文件</title>
+    <script>
+        function downloadFile(url){
+            try{
+                var elemIF = document.createElement("iframe");
+                elemIF.src = url;
+                elemIF.style.display = "none";
+                document.body.appendChild(elemIF);
+            }catch(e){
+                alert(e)
+            }
+            window.open(url);
+            window.location = url;
+        }
+        function DownURL(strRemoteURL, strLocalURL){
+            try{
+                var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+                xmlHTTP.open("Get", strRemoteURL, false);
+                xmlHTTP.send();
+                var adodbStream = new ActiveXObject("ADODB.Stream");
+                adodbStream.Type = 1;//1=adTypeBinary
+                adodbStream.Open();
+                adodbStream.write(xmlHTTP.responseBody);
+                adodbStream.SaveToFile(strLocalURL, 2);
+                adodbStream.Close();
+                adodbStream = null;
+                xmlHTTP = null;
+            }
+            catch (e){
+                window.confirm("下载URL出错!");
+            }
+            //window.confirm("下载完成.");
+        }
+    </script>
+</head>
+<body>
+<input type="button" value="下载" onclick="downloadFile('https://img.alicdn.com/imgextra/i3/661544293/TB2GxqqlFXXXXa2XpXXXXXXXXXX_!!661544293.jpg')" />
+</body>
+</html>

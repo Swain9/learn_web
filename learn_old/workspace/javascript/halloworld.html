@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>halloworld</title>
+    <script type="text/javascript" >
+        function huiche(){
+            if(event.keyCode=="13"){
+                document.getElementById("btnSum").onclick();
+            }
+        }
+        function jisuan(){
+            var hong =0;
+            var money;
+            var point = parseFloat(document.getElementById("txtPoint").value);
+            document.getElementById("txtrmb").value=point/10000*16;
+            var days = parseInt(document.getElementById("txtDays").value);
+            for(days;days>0;days--){
+                hong += point*5/10000;
+                point=point-point*5/10000;
+            }
+            money=hong*0.01*0.99;
+            document.getElementById("txtBaiJiFen").value=point;
+            document.getElementById("txtHongJiFen").value=hong;
+            document.getElementById("txtMoney").value = money;
+        }
+        function fuli(){
+
+        }
+        function danli(){
+            this.money = 0;
+        }
+        var danliObj = new danli();
+        alert(danliObj.money);
+    </script>
+</head>
+<body onkeydown="huiche()">
+<div>
+    白积分：<input type="text" id="txtBaiJiFen" />
+    红积分：<input type="text" id="txtHongJiFen" />
+    金额：<input type="text" id="txtMoney" />
+</div>
+<div>
+    积分：<input type="text" id="txtPoint" />
+    天数：<input type="text" id="txtDays" />
+</div>
+<div>
+    人民币：<input type="text" id="txtrmb" />
+    <input type="button" id="btnSum" value="计算" onclick="jisuan()"/>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			.list_num {
+				display: inline;
+				margin: 20px;
+			}
+		</style>
+		<script src="js/jquery-3.2.1.js"></script>
+		<script>
+			$(function() {
+				
+				$("button").on("click", function() {
+					var total_num = $("#total_num").val();
+					var my_num = $("#my_num").val();
+					if(total_num === "" || my_num === ""){
+						alert("请填写！");
+						return;
+					}
+					if(isNaN(total_num) || isNaN(my_num)){
+						alert("请填写数字！");
+						return;
+					}
+					init(total_num);
+				});
+
+				function init(list_num) {
+					var $list_show = $("#list_show");
+					var list_str = '';
+					for(var i = 1; i <= list_num; i++) {
+						var s = i < 10 ? '0' + i : i;
+						list_str += ("<span class='list_num'>" + s + "</span>");
+						if(i  8 === 0) {
+							list_str += "<br />";
+						}
+					}
+					$list_show.append(list_str);
+				}
+			});
+		</script>
+	</head>
+
+	<body>
+		已排序人数<input id="total_num" type="text" /><br /> 我的位置
+		<input id="my_num" type="text" /><br />
+		<button>提交</button>
+		<div id="list_show"></div>
+	</body>
+
+</html>

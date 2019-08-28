@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>javascript判断对象数据类型</title>
+    <script>
+        /*
+         我们知道，JavaScript中检测对象类型的运算符有：typeof、instanceof，还有对象的constructor属性：
+         1) typeof 运算符 typeof 是一元运算符，返回结果是一个说明运算数类型的字符串。
+         如："number"，"string"，"boolean"，"object"，"function"，"undefined"（可用于判断变量是否存在）。
+          但 typeof 的能力有限，其对于Date、RegExp类型返回的都是"object"。如：
+         typeof {}; // "object"
+         typeof []; // "object"
+         typeof new Date(); // "object"
+         所以它只在区别对象和原始类型的时候才有用。要区一种对象类型和另一种对象类型，必须使用其他的方法。
+         如：instanceof 运算符或对象的 constructor 属。
+         2）instanceof 运算符。 instanceof 运算符要求其左边的运算数是一个对象，右边的运算数是对象类的名字或构造函数。
+         如果 object 是 class 或构造函数的实例，则 instanceof 运算符返回 true。
+         如果 object 不是指定类或函数的实例，或者 object 为 null，则返回 false。如：
+         [] instanceof Array; // true
+         [] instanceof Object; // true
+         [] instanceof RegExp; // false
+         new Date instanceof Date; // true
+         所以，可以用instanceof运算符来判断对象是否为数组类型：
+         function isArray(arr){
+         return arr instanceof Array;
+         }
+         3）constructor 属性。
+         JavaScript中，每个对象都有一个constructor属性，它引用了初始化该对象的构造函数，常用于判断未知对象的类型。
+         如给定一个求知的值 通过typeof运算符来判断它是原始的值还是对象。
+         如果是对象，就可以使用constructor属性来判断其类型。所以判断数组的函数也可以这样写：
+         function isArray(arr){
+         return typeof arr == "object" && arr.constructor == Array;
+         }
+         很多情况下，我们可以使用instanceof运算符或对象的constructor属性来检测对象是否为数组。
+         例如很多JavaScript框架就是使用这两种方法来判断对象是否为数组类型。
+          但是检测在跨框架（cross-frame）页面中的数组时，会失败。
+          原因就是在不同框架（iframe）中创建的数组不会相互共享其prototype属性。例如：
+         window.onload=function(){
+         var iframe_arr=new window.frames[0].Array;
+         alert(iframe_arr instanceof Array); // false
+         alert(iframe_arr.constructor == Array); // false
+         }
+         */
+    </script>
+</head>
+<body>
+
+</body>
+</html>

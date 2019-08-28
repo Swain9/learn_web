@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>json数据</title>
+    <script>
+        /*
+         JSON 语法规则
+         JSON 语法是 JavaScript 对象表示语法的子集。
+         数据在键值对中
+         数据由逗号分隔
+         花括号保存对象
+         方括号保存数组
+         JSON 名称/值对
+         JSON 数据的书写格式是：名称/值对。
+         名称/值对组合中的名称写在前面（在双引号中），值对写在后面(同样在双引号中)，中间用冒号隔开："firstName":"John"
+         这很容易理解，等价于这条 JavaScript 语句：firstName="John"
+         JSON 值
+         JSON 值可以是：数字（整数或浮点数），字符串（在双引号中），逻辑值（true 或 false）
+         数组（在方括号中）
+         对象（在花括号中）
+         null
+         */
+        var peo = {
+            id: '100000',
+            text: '廊坊银行总行',
+            children: [
+                {
+                    id: '110000',
+                    text: '廊坊分行',
+                    children: [
+                        {
+                            id: '113000',
+                            text: '廊坊银行开发区支行',
+                            leaf: true
+                        },
+                        {
+                            id: '112000',
+                            text: '廊坊银行解放道支行',
+                            children: [
+                                {
+                                    id: '112200',
+                                    text: '廊坊银行三大街支行',
+                                    leaf: true
+                                },
+                                {
+                                    id: '112100',
+                                    text: '廊坊银行广阳道支行',
+                                    leaf: true
+                                }
+                            ]
+                        },
+                        {
+                            id: '111000',
+                            text: '廊坊银行金光道支行',
+                            leaf: true
+                        }
+                    ]
+                }
+            ]
+        }
+        var person = {
+            name: "张三",
+            age: 18,
+            says: function () {
+                alert(this.name);
+            }
+        }
+        person.says();
+    </script>
+</head>
+<body>
+
+</body>
+</html>
