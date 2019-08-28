@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>后代选择器-无限后代查找</title>
+    <style type="text/css">
+        div p span {
+            color: #f0f;
+        }
+
+        div span {
+            background: #000;
+        }
+
+        #div1 span {
+            color: red;
+        }
+
+        .div1 span {
+            font-size: 25px;
+        }
+        .div1 .div2{
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <p><span>我好</span></p>
+    <div id="div1"><span>你好</span></div>
+</div>
+<div class="div1">
+    <p><span>他好</span></p>
+    <span>大家好</span>
+</div>
+<div class="div1">
+    <div class="div2">蓝色</div>
+</div>
+</body>
+</html>
