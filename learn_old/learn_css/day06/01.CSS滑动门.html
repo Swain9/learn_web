@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS滑动门</title>
+    <style type="text/css">
+        .box {
+            height: 100px;
+        }
+
+        .left, .mid, .right {
+            float: left;
+        }
+
+        .mid {
+            height: 100px;
+            background: url("image/m.png");
+            line-height: 100px;
+        }
+
+        .clearfix:after {
+            content: '.';
+            display: block;
+            height: 0;
+            line-height: 0;
+            visibility: hidden;
+            clear: both;
+        }
+
+        /*复杂滑动门*/
+        body, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav {
+            margin-top: 10px;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        .nav ul li {
+            float: left;
+            height: 35px;
+        }
+
+        .nav ul li a {
+            display: inline-block;
+            text-decoration: none;
+            height: 35px;
+            background: url("image/bg_r1_c1.png") no-repeat;
+            padding-left: 7px;
+            color: #fff;
+        }
+
+        .nav ul li a span {
+            display: inline-block;
+            height: 35px;
+            line-height: 35px;
+            background: url("image/bg_r1_c2.png") right;
+            padding-right: 25px;
+        }
+        .nav ul li a:hover{
+            background: url("image/blue_r1_c1.png") no-repeat;
+        }
+        .nav ul li a span:hover{
+            background: url("image/blue_r1_c2.png") right;
+        }
+    </style>
+</head>
+<body>
+<div class="box clearfix">
+    <div class="left"><img src="image/l.png" alt=""></div>
+    <div class="mid">水水水水水</div>
+    <div class="right"><img src="image/r.png" alt=""></div>
+</div>
+<div class="nav">
+    <ul>
+        <li><a href="#"><span>老牛逼11111</span></a></li>
+        <li><a href="#"><span>老牛逼</span></a></li>
+        <li><a href="#"><span>老牛逼</span></a></li>
+    </ul>
+</div>
+</body>
+</html>
