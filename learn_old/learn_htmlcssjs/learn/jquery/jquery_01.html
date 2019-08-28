@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>测试</title>
+		<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+	</head>
+
+	<body>
+		<div>
+			<form>
+				<table>
+					<tr>
+						<td><input type="checkbox" class="iptChk" checked="checked" mytitle="你好"/></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<script>
+			$(function() {
+				$(".iptChk").click(function  () {
+					alert($(this).prop("checked"));  //固有属性 true false
+					alert($(this).attr("checked"));  //已定义属性 checked
+					
+					alert($(this).prop("mytitle"));  //固有属性 undefined
+					alert($(this).attr("mytitle"));  //已定义属性 你好
+				});
+			})
+		</script>
+	</body>
+
+</html>

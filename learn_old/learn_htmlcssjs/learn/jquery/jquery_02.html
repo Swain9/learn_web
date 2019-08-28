@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+		<script>
+			$(function  () {
+				var arr = new Array("你好", "我好", "他好");
+			//			$(arr).each(function(i, n) {
+			//				alert(i + ':' + n);
+			//			});
+			//			$.each(arr, function(i, n) {
+			//				alert(i + ':' + n);
+			//			});
+			var op = "";
+			$.each(arr, function(i, n) {
+				op += "<option value='" + i + "'>" + n + "</option>";
+			});
+			$("select").html(op);
+			});
+			
+			
+		</script>
+	</head>
+
+	<body>
+		<select></select>
+	</body>
+
+</html>

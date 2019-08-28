@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery-3.2.1.js"></script>
+		<script>
+			$(function() {
+				//在jQuery 1.3.2中，appendTo, prependTo, insertBefore, insertAfter, 和 replaceAll这个几个方法成为一个破坏性操作，
+				//返回值是所有被追加的内容，而不仅仅是先前所选中的元素。 所以， 要选择先前选中的元素， 需要使用end() 方法， 参见例二。
+
+				//我的理解：添加了end方法后，p元素相当于重置为初始状态
+				//$("<p/>").appendTo("div").addClass("test").end().addClass("test2");
+				//我的理解：没有添加end方法，p元素
+				//$("<p/>").appendTo("div").addClass("test").addClass("test2");
+				//alert($("<p></p>").appendTo(".test1")[0].nodeName);
+				//$("<p/>").appendTo("div").addClass("test1").end().addClass("test2").addClass("test3");
+				//我的理解：
+				//一：将P表情插入到div标签里面，此时产生5个p标签
+				//二：将所有p标签添加a样式
+				//三：end获取最后一个p标签，即<p class='a'></p>，并将其从最后一个div里面移除
+				//四：将<p class='a'></p>追加到样式为test2的标签里面，产生2个<p class='a'></p>
+				//五：将所有<p class='a'></p>添加b样式
+				//六：end获取最后一个p标签，即<p class='a b'></p>，并将其从最后一个div（class=test2)里面移除
+				//七：将<p class='a b'></p>追加到属性名称name=nihao的标签里面，产生一个<p class='a b'></p>
+				//把：将所有<p class='a b'></p>添加c样式
+				$("<p></p>").appendTo("div").addClass("a").end().appendTo(".test2").addClass("b").end().appendTo("[name='nihao']").addClass("c");
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="test1"></div>
+		<div class="test2"></div>
+		<div id="test3" class="test2"></div>
+		<div id="test5"></div>
+		<div name="nihao"></div>
+	</body>
+
+</html>
