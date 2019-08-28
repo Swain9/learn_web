@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE descriptive SYSTEM "DTD约束.dtd">
+<descriptive>
+    <other></other>
+
+    <!--
+    <![CDATA[
+    DTD(Document Type Definition)：文档类型定义。
+    作用：约束XML的书写规范
+    文件清单：book.xml
+    <?xml version="1.0" ?>
+    <!DOCTYPE 书架 SYSTEM "book.dtd">
+<书架>
+	<书>
+		<书名>Java就业培训教程</书名>
+		<作者>张孝祥</作者>
+		<售价>39.00元</售价>
+	</书>
+	<书>
+		<书名>JavaScript网页开发</书名>
+		<作者>张孝祥</作者>
+		<售价>28.00元</售价>
+	</书>
+</书架>
+
+文件清单：book.dtd
+<!ELEMENT 书架 (书+)>   //根元素是书架，子元素是书，+代表正则表达式，可以有多个。
+	<!ELEMENT 书 (书名,作者,售价)>    //元素书，子元素是书名，作者，售价。“,”表示严格的顺序关系
+	<!ELEMENT 书名 (#PCDATA)>         //元素书名，子元素是 普通的文本节点 被解析的字符数据（Parsed Character Data）
+	<!ELEMENT 作者 (#PCDATA)>
+	<!ELEMENT 售价 (#PCDATA)>
+
+声明属性
+属性声明使用下列语法：
+
+<!ATTLIST 元素名称 属性名称 属性类型 默认值>
+DTD 实例:
+<!ATTLIST payment type CDATA "check">
+XML 实例:
+<payment type="check" />
+
+语法：
+<!ENTITY 实体名称 "实体的值">例子：
+DTD 例子:
+
+<!ENTITY writer "Bill Gates">
+<!ENTITY copyright "Copyright W3School.com.cn">XML 例子:
+
+<author>&writer;&copyright;</author>注释: 一个实体由三部分构成: 一个和号 (&), 一个实体名称, 以及一个分号 (;)。
+
+    ]]>
+    -->
+</descriptive>
