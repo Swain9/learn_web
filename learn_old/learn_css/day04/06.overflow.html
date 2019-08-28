@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>overflow:溢出</title>
+    <style type="text/css">
+        .box {
+            width: 300px;
+            height: 300px;
+            background: #eeeeee;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var $visible, $hidden, $scroll, $auto,$box;
+            $visible = document.getElementById("visible");
+            $hidden = document.getElementById("hidden");
+            $scroll = document.getElementById("scroll");
+            $auto = document.getElementById("auto");
+            $box = document.getElementsByClassName("box")[0];
+
+            $visible.addEventListener("click",function () {
+                $box.style.overflow = "visible";
+            });
+            $hidden.addEventListener("click",function () {
+                $box.style.overflow = "hidden";
+            });
+            $scroll.addEventListener("click",function () {
+                $box.style.overflow = "scroll";
+            });
+            $auto.addEventListener("click",function () {
+                $box.style.overflow = "auto";
+            });
+        }
+    </script>
+</head>
+<body>
+
+<h1>overflow:visible 默认值.内容不会被修剪,会呈现在元素框之外.</h1>
+<h1>overflow:hidden 内容会被修剪,并且其余内容是不可见的.</h1>
+<h1>overflow:scroll 内容会被修剪,但是浏览器会显示滚动条以便查看其余的内容</h1>
+<h1>overflow:auto 如果内容被修剪,则浏览器会显示滚动条以便查看其余的内容</h1>
+
+<input id="visible" type="button" value="visible">
+<input id="hidden" type="button" value="hidden">
+<input id="scroll" type="button" value="scroll">
+<input id="auto" type="button" value="auto">
+<div class="box">
+    <img src="image/1.jpg" alt="">
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+    <p>赞赞赞赞赞赞</p>
+</div>
+</body>
+</html>

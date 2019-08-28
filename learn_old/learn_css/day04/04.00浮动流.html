@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>浮动流</title>
+    <style type="text/css">
+        .red, .green, .blue {
+            width: 200px;
+            height: 200px;
+        }
+
+        .red {
+            background: red;
+            float: left;
+        }
+
+        .green {
+            background: green;
+            /*width: 300px;*/
+            /*height: 300px;*/
+            float: left;
+        }
+
+        .blue {
+            background: blue;
+            /*width: 300px;*/
+            /*height: 300px;*/
+            /*float: left;*/
+            float: right;
+        }
+
+        span {
+            background: pink;
+            float: left;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<h1>元素浮动之后,不再占据原来得位置,由其他元素顶替(脱离标准流)</h1>
+<h1>浮动得盒子在一行上显示</h1>
+<h1>行内元素浮动之后转换为行内块元素了(不推荐使用,转行内元素最好使用display:inline-block;)</h1>
+<h1>作用:1.文本绕图 2.制作导航 3.网页布局</h1>
+
+
+<div style="width: 100%;height: 200px;background:#000;">
+    <div style="width: 100px;height: 200px;background:red;float:left;"></div>
+    <div style="width: 200px;height: 200px;background:yellow;"></div>
+    <div style="width: 200px;height: 200px;background:blue;"></div>
+</div>
+
+
+<div class="red"></div>
+<div class="green"></div>
+<div class="blue"></div>
+<span></span>
+</body>
+</html>

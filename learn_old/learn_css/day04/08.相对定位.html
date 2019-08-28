@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>相对定位</title>
+    <style type="text/css">
+        .red, .green {
+            width: 100px;
+            height: 100px;
+        }
+
+        .red {
+            background: red;
+            position: relative;
+            left: -50px;
+            bottom: 50px;
+        }
+
+        .green {
+            background: green;
+        }
+    </style>
+</head>
+<body>
+<h1>position: relative;相对定位</h1>
+<h1>使用相对定位,位置相对于自身的出发,还是占据原来的位置(不脱离标准流)</h1>
+<h1>子绝父相(父元素相对定位,子元素绝对定位)工作中常用,子元素始终相对父元素位置出发o</h1>
+<div class="red"></div>
+<div class="green">
+    <div class="son"></div>
+</div>
+
+<h1>行内元素使用相对定位,不能转行内块元素</h1>
+<span></span>
+</body>
+</html>

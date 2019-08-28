@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>定位</title>
+    <style type="text/css">
+        .box1 {
+            width: 100px;
+            height: 100px;
+            background: red;
+            /*静态定位*/
+            position: static;
+            left: 200px;
+        }
+
+        .father {
+            width: 200px;
+            height: 200px;
+            background: green;
+        }
+
+        .box2 {
+            width: 100px;
+            height: 100px;
+            background: blue;
+            /*绝对定位*/
+            position: absolute;
+            left: 100px;
+            top: 200px;
+        }
+
+        .span1 {
+            width: 200px;
+            height: 200px;
+            background: orange;
+            position: absolute;
+            /*调整元素的层叠顺序,默认值0-999*/
+            z-index: 2;
+        }
+
+        .span2 {
+            width: 200px;
+            height: 200px;
+            background: aqua;
+            position: absolute;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+<h1>定位方向:left,right,top,bottom</h1>
+<h1>position:static; 静态定位,默认值就是文档流</h1>
+<div class="box1"></div>
+<hr>
+<h1>position:absolute; 绝对定位,使用绝对定位之后,不占据原来的位置(脱离标准流)</h1>
+<h1>元素使用绝对定位,位置是基于浏览器边框出发</h1>
+<h1>嵌套的盒子,父盒子没有使用定位,子盒子则绝对定位,位置从浏览器出发</h1>
+<h1>嵌套的盒子,父盒子使用定位,子盒子则绝对定位,位置从父盒子边框出发</h1>
+<div class="father">
+    <div class="box2"></div>
+</div>
+<h1>给行内元素使用绝对定位之后,状态转换为行内块元素,不推荐使用(inline-block;)</h1>
+<span class="span1"></span>
+<span class="span2"></span>
+
+</body>
+</html>
