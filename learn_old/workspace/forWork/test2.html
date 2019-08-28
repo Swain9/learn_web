@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function okOne() {
+            var numArr;
+            var redNumArr;
+            var liRedArr;
+            numArr = new Array();
+            redNumArr = new Array();
+            liRedArr = new Array();
+            var num = 0;
+            var index;
+            for (var i = 0; i < 33; i++) {
+                numArr[i] = i + 1;
+            }
+            var a;
+            var j = 33;
+            for (var i = 0; i < 6; i++) {
+                redNumArr = numArr;
+                index = Math.ceil(Math.random() * j);
+                a = redNumArr.splice(index - 1, 1);
+                liRedArr[i] = a;
+                numArr = redNumArr.splice(0, j);
+                j--;
+            }
+            document.getElementById("red").value = liRedArr.toString();
+            document.getElementById("blue").value = Math.ceil(Math.random() * 16);
+        }
+    </script>
+</head>
+<body onload="okOne()">
+<input type="text" id="red" />
+<input type="text" id="blue" />
+</body>
+</html>

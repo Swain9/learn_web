@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script type="text/javascript">
+        function test() {
+            var nameInfo = document.getElementsByClassName("prime-info");
+            var a = nameInfo[0].childNodes;
+            alert(a[2].firstChild.nodeValue);
+        }
+        var txt = '{ "employees" : [' +
+                '{ "firstName":"Bill" , "lastName":"Gates" },' +
+                '{ "firstName":"George" , "lastName":"Bush" },' +
+                '{ "firstName":"Thomas" , "lastName":"Carter" } ]}';
+
+    </script>
+</head>
+<body>
+<input type="button" value="改变" class="btn btn-primary notprint" id="btnChange" onclick="test()">
+<div class="prime-info" style="margin-right: 20px;"><p><span></span></p>
+    <h3 style="font-weight: normal">杨燕辉</h3>
+    <p></p></div>
+<ul class="sub-info">
+    <li><span>生成时间： </span>2016-05-19 18:15</li>
+    <li><span>订单编号： </span>201605195832261</li>
+</ul>
+<br class="clear"></div>
+</body>
+</html>
