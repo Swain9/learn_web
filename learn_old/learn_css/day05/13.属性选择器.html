@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>属性选择器</title>
+    <style type="text/css">
+        input[type=text][class=user] {
+            width: 100px;
+            height: 100px;
+            background: red;
+        }
+        input[type=text][id=pwd] {
+            width: 100px;
+            height: 100px;
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+<input type="text" class="user">
+<input type="text" class="pwd" id="pwd">
+<input type="password">
+<input type="submit">
+<input type="button">
+</body>
+</html>

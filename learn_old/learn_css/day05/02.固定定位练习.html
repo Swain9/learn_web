@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>固定定位</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .pic {
+            width: 998px;
+            margin: 44px auto 0;
+        }
+
+        .nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .left {
+            position: fixed;
+            left: 0;
+            top: 70px;
+        }
+
+        .right {
+            position: fixed;
+            right: 0;
+            top: 70px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="nav"><img src="image/r1_c1.png" alt=""></div>
+    <div class="pic"><img src="image/box.png" alt=""></div>
+    <div class="left"><img src="image/r2_c1.png" alt=""></div>
+    <div class="right"><img src="image/r2_c2.png" alt=""></div>
+</div>
+</body>
+</html>

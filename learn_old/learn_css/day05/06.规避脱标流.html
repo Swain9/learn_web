@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>规避脱标流</title>
+    <style type="text/css">
+        .father {
+            width: 500px;
+            height: 500px;
+            background: red;
+        }
+
+        .son {
+            width: 100px;
+            height: 100px;
+            background: green;
+            /*margin-left: auto;*/
+            margin: 0 0 auto auto;
+        }
+    </style>
+</head>
+<body>
+<h1>尽量使用标准流</h1>
+<h1>标准流解决不了的使用浮动流</h1>
+<h1>浮动流解决不了的使用定位</h1>
+<div class="father">
+    <div class="son"></div>
+</div>
+</body>
+</html>

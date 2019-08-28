@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS内容移除</title>
+    <style type="text/css">
+        .logo {
+            width: 143px;
+            height: 76px;
+            background: url("image/logo.png");
+        }
+
+        .logo a {
+            width: 100%;
+            height: 100%;
+            display: inline-block;
+            text-indent: -5000em;
+            /*line-height: 500em;*/
+        }
+
+        .box {
+            width: 143px;
+            height: 0;
+            padding-top: 76px;
+            background: url("image/logo.png");
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="logo">
+    <h1><a href="http://www.baidu.com">百度</a></h1>
+</div>
+<div class="box">
+    百度
+</div>
+</body>
+</html>
