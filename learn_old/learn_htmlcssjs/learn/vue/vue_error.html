@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/vue.js"></script>
+	</head>
+
+	<body>
+		<div id="my_exm4">
+			<comp some-prop="1"></comp>
+			<comp :some-prop="1"></comp>
+		</div>
+		<script>
+			Vue.component('comp', {
+				props: ['someProp'],
+				template: '<span>{{alert(typeof someProp)}}</span>'
+			});
+			var my_exm4 = new Vue({
+				el: '#my_exm4'
+			});
+		</script>
+	</body>
+
+</html>

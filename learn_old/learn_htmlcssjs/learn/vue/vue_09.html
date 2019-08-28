@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>事件处理器</title>
+		<script type="text/javascript" src="js/vue.js"></script>
+		<style>
+			h2 {
+				color: #FF0000;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>事件处理器</h1>
+		<h2>监听事件</h2>
+		<hr />
+		<div>可以用 v-on 指令监听 DOM 事件来触发一些 JavaScript 代码。</div>
+		<p>示例：</p>
+		<div id="example-1">
+			<!--可以直接写js代码-->
+			<button v-on:click="counter += 1">增加 1</button>
+			<p>这个按钮被点击了 {{ counter }} 次。</p>
+		</div>
+		<script>
+			var exm1 = new Vue({
+				el: '#example-1',
+				data: {
+					counter: 0
+				}
+			});
+		</script>
+		<h2>方法事件处理器</h2>
+		<hr />
+		<div>许多事件处理的逻辑都很复杂，所以直接把 JavaScript 代码写在 v-on 指令中是不可行的。因此 v-on 可以接收一个定义的方法来调用。</div>
+		<p>示例：</p>
+		<div id="example-2">
+			<!-- `greet` 是在下面定义的方法名 -->
+			<button v-on:click="greet">Greet</button>
+		</div>
+		<div id="my_exm1">
+			<button v-on:click="greet">{{counter}}</button>
+		</div>
+		<script>
+			var exm2 = new Vue({
+				el: '#example-2',
+				data: {
+					name: 'Vue.js'
+				},
+				// 在 `methods` 对象中定义方法
+				methods: {
+					greet: function(event) {
+						// `this` 在方法里指当前 Vue 实例
+						alert('Hello ' + this.name + '!');
+						// `event` 是原生 DOM 事件
+						alert(event.target.tagName);
+					}
+				}
+			});
+
+			var my_exm1 = new Vue({
+				el: '#my_exm1',
+				data: {
+					counter: 0
+				},
+				methods: {
+					greet: function() {
+						this.counter++;
+					}
+				}
+			});
+		</script>
+		<h2>内联处理器方法</h2>
+		<hr />
+		<div>除了直接绑定到一个方法，也可以用内联 JavaScript 语句：</div>
+		<div id="example-3">
+			<button v-on:click="say('hi')">Say hi</button>
+			<button v-on:click="say('what')">Say what</button>
+		</div>
+		<script>
+			var exm3 = new Vue({
+				el: '#example-3',
+				methods: {
+					say: function(message) {
+						alert(message);
+					}
+				}
+			});
+		</script>
+		<p>有时也需要在内联语句处理器中访问原生 DOM 事件。可以用特殊变量 $event 把它传入方法：</p>
+		<button id="example-4" v-on:click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+		<script>
+			var exm4 = new Vue({
+				el: '#example-4',
+				methods: {
+					warn: function(message, e) {
+						if(e) {
+							e.preventDefault();
+						}
+						alert(e.target.tagName);
+						alert(message);
+					}
+				}
+			});
+		</script>
+		<h2>事件修饰符</h2>
+		<hr />
+		<div>在事件处理程序中调用 event.preventDefault() 或 event.stopPropagation() 是非常常见的需求。</div>
+		<div>尽管我们可以在 methods 中轻松实现这点，但更好的方式是：methods 只有纯粹的数据逻辑，而不是去处理 DOM 事件细节。</div>
+		<p>为了解决这个问题， Vue.js 为 v-on 提供了 事件修饰符。通过由点(.)表示的指令后缀来调用修饰符。</p>
+		<ul>
+			<li>.stop</li>
+			<li>.prevent</li>
+			<li>.capture</li>
+			<li>.self</li>
+			<li>.once</li>
+		</ul>
+		<div id="example-5">
+			<!-- 阻止单击事件冒泡 -->
+			<a v-on:click.stop="doThis">阻止单击事件冒泡 </a>
+			<!-- 提交事件不再重载页面 -->
+			<form v-bind:action="action" v-on:submit.prevent="onSubmit"><input type="submit" value="提交" />提交事件不再重载页面</form>
+			<!-- 提交事件重载页面 -->
+			<form v-bind:action="action" v-on:submit="onSubmit"><input type="submit" value="提交" />提交事件重载页面</form>
+			<!-- 修饰符可以串联  -->
+			<a v-on:click.stop.prevent="doThat">修饰符可以串联</a>
+			<!-- 只有修饰符 -->
+			<form v-on:submit.prevent>只有修饰符</form>
+			<!-- 添加事件侦听器时使用事件捕获模式 -->
+			<div v-on:click.capture="doThis">添加事件侦听器时使用事件捕获模式</div>
+			<!-- 只当事件在该元素本身（而不是子元素）触发时触发回调 -->
+			<div style="border: dashed red 2px;" v-on:click.self="doThat">
+				只当事件在该元素本身
+				<p>（而不是子元素）触发时触发回调</p>
+			</div>
+			<p>2.1.4 新增</p>
+			<!-- 点击事件将只会触发一次 -->
+			<a v-on:click.once="doThis">{{action}}</a>
+		</div>
+		<script>
+			var exm5 = new Vue({
+				el: '#example-5',
+				data: {
+					action: 'http://www.baidu.com/'
+				},
+				methods: {
+					doThis: function() {
+						alert('aaa');
+					},
+					onSubmit: function() {
+						alert('提交中...');
+					},
+					doThat: function(e) {
+						alert(e.target.tagName);
+					}
+				}
+			});
+		</script>
+		<h2>按键修饰符</h2>
+		<hr />
+		<div>在监听键盘事件时，我们经常需要监测常见的键值。 Vue 允许为 v-on 在监听键盘事件时添加按键修饰符：</div>
+		<div>只有在 keyCode 是 13 时调用 vm.submit()</div>
+		<p>&lt;input v-on:keyup.13="submit" /&gt;</p>
+		<p>记住所有的 keyCode 比较困难，所以 Vue 为最常用的按键提供了别名：</p>
+		<div>
+			<div>同上</div>
+			&lt;input v-on:keyup.enter="submit"&gt;
+			<div>缩写语法</div>
+			&lt;input @keyup.enter="submit"&gt;
+		</div>
+		<p>全部的按键别名：</p>
+		<ul>
+			<li>.enter</li>
+			<li>.tab</li>
+			<li>.delete(捕获 “删除” 和 “退格” 键)</li>
+			<li>.esc</li>
+			<li>.space</li>
+			<li>.up</li>
+			<li>.down</li>
+			<li>.left</li>
+			<li>.right</li>
+		</ul>
+		<div>可以通过全局 config.keyCodes
+			<a href="https://cn.vuejs.org/v2/api/#keyCodes">对象自定义按键修饰符别名：</a>
+		</div>
+		<div>// 可以使用 v-on:keyup.f1
+			<p>Vue.config.keyCodes.f1 = 112</p>
+		</div>
+		<p>测一测：</p>
+		<div id="example-6">
+			<input v-on:keyup.enter='myenter' v-on:keyup.tab='mytab' v-on:keyup.delete='mydelete' />
+		</div>
+		<script>
+			var exm6 = new Vue({
+				el: '#example-6',
+				methods: {
+					myenter: function(e) {
+						alert(e.target.value);
+					},
+					mytab: function(e) {
+						alert('tab' + e.target.value);
+					},
+					mydelete: function(e) {
+						alert('delete' + e.target.value);
+					}
+				}
+			});
+		</script>
+		<h2>按键修饰符</h2>
+		<div>可以用如下修饰符开启鼠标或键盘事件监听，使在按键按下时发生响应。</div>
+		<ul>
+			<li>.ctrl</li>
+			<li>.alt</li>
+			<li>.shift</li>
+			<li>.meta</li>
+		</ul>
+		<div>注意：在Mac系统键盘上，meta对应命令键 (⌘)。在Windows系统键盘meta对应windows徽标键(⊞)。</div>
+		<div>在Sun操作系统键盘上，meta对应实心宝石键 (◆)。在其他特定键盘上，尤其在MIT和Lisp键盘及其后续，</div>
+		<div>比如Knight键盘，space-cadet键盘，meta被标记为“META”。在Symbolics键盘上，meta被标记为“META” 或者 “Meta”。 例如:</div>
+		<p>
+			<div> Alt + C </div>
+			<div>&lt;input @keyup.alt.67="clear"&gt;</div>
+			<div>Ctrl + Click </div>
+			<div>&lt;div @click.ctrl="doSomething"&gt;Do something&lt;/div&gt;</div>
+		</p>
+		<div>Note that modifier keys are different from regular keys and when used with keyup events, </div>
+		<div>they have to be pressed when the event is emitted. In other words, </div>
+		<div>keyup.ctrl will only trigger if you release a key while holding down ctrl. </div>
+		<div>It won’t trigger if you release the ctrl key alone.</div>
+		<p>for example:</p>
+		<div id="example-7">
+			<input @keyup.alt.67="clear" />
+			<div @click.ctrl="doSomething">Do something</div>
+		</div>
+		<script>
+			var exm7 = new Vue({
+				el: '#example-7',
+				methods: {
+					clear: function(e) {
+						e.target.value = '';
+					},
+					doSomething: function(e) {
+						alert(e.target.childNodes[0].nodeValue);
+					}
+				}
+			});
+		</script>
+		<h2>Mouse Button Modifiers</h2>
+		<p>New in 2.2.0</p>
+		<ul>
+			<li>.left</li>
+			<li>.right</li>
+			<li>.middle</li>
+		</ul>
+		<div>These modifiers restrict the handler to events triggered by a specific mouse button.</div>
+		<div>for example</div>
+		<div id="example-8">
+			<p @contextmenu.prevent="showme">click me</p>
+			<button @click.left="showme2">click me too</button>
+		</div>
+		<script>
+			var exm8 = new Vue({
+				el: '#example-8',
+				methods: {
+					showme: function(e) {
+						alert(e.target.childNodes[0].nodeValue);
+					},
+					showme2: function(e) {
+						alert(e.target.childNodes[0].nodeValue);
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

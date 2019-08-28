@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>条件渲染</title>
+		<script type="text/javascript" src="js/vue.js"></script>
+		<style>
+			h2 {
+				color: #ff0000
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>条件渲染</h1>
+		<h2>v-if</h2>
+		<hr />
+		<div>在字符串模板中，如 Handlebars ，我们得像这样写一个条件块：
+			<!-- Handlebars 模板 -->
+			{{#if ok}} &lt;h1&gt;Yes&lt;/h1&gt; {{/if}}
+		</div>
+		<div>在 Vue.js ，我们使用 v-if 指令实现同样的功能：</div>
+		<h1 id="msg1" v-if="ok">Yes</h1>
+		<script>
+			var msg1 = new Vue({
+				el: '#msg1',
+				data: {
+					ok: true
+				}
+			});
+		</script>
+		<div>也可以用 v-else 添加一个 “else” 块：</div>
+		<div id="msg2">
+			<h1 v-if="ok">Yes</h1>
+			<h1 v-else>No</h1>
+		</div>
+		<script>
+			var msg2 = new Vue({
+				el: '#msg2',
+				data: {
+					ok: true
+				}
+			});
+		</script>
+		<hr />
+		<h2>&lt;template&gt; 中 v-if 条件组</h2>
+		<div>因为 v-if 是一个指令，需要将它添加到一个元素上。但是如果我们想切换多个元素呢？</div>
+		<div>此时我们可以把一个&lt;template&gt;元素当做包装元素，并在上面使用 v-if。</div>
+		<div>最终的渲染结果不会包含 &lt;template&gt; 元素。</div>
+		<div id="msg3">
+			<template v-if="ok">
+				<h1>Title</h1>
+				<p>Paragraph 1</p>
+				<p>Paragraph 2</p>
+			</template>
+		</div>
+		<script>
+			var msg3 = new Vue({
+				el: '#msg3',
+				data: {
+					ok: true
+				}
+			});
+		</script>
+		<hr />
+		<h2>v-else</h2>
+		<div>你可以使用 v-else 指令来表示 v-if 的“else 块”：</div>
+		<div id="msg4">
+			<div v-if="Math.random() > 0.5">
+				Now you see me
+			</div>
+			<div v-else>
+				Now you don't
+			</div>
+		</div>
+		<script>
+			var msg4 = new Vue({
+				el: '#msg4'
+			});
+		</script>
+		<h2>v-else-if</h2>
+		<p>2.1.0 新增</p>
+		<div>v-else-if，顾名思义，充当 v-if 的“else-if 块”。可以链式地使用多次：</div>
+		<div id="msg5">
+			<div v-if="type === 'A'">
+				A
+			</div>
+			<div v-else-if="type === 'B'">
+				B
+			</div>
+			<div v-else-if="type === 'C'">
+				C
+			</div>
+			<div v-else>
+				Not A/B/C
+			</div>
+		</div>
+		<script>
+			var msg5 = new Vue({
+				el: '#msg5',
+				data: {
+					type: 'E'
+				}
+			});
+		</script>
+		<div>类似于 v-else，v-else-if 必须紧跟在 v-if 或者 v-else-if 元素之后。</div>
+		<h2>用 key 管理可复用的元素</h2>
+		<div>Vue 会尽可能高效地渲染元素，通常会复用已有元素而不是从头开始渲染。</div>
+		<div>这么做，除了使 Vue 变得非常快之外，还有一些有用的好处。例如，如果你允许用户在不同的登录方式之间切换:</div>
+		<div id="msg6">
+			<template v-if="loginType === 'username'">
+				<label>Username</label>
+				<input placeholder="Enter your username">
+			</template>
+			<template v-else>
+				<label>Email</label>
+				<input placeholder="Enter your email address">
+			</template>
+			<button v-on:click="switchs">你好</button>
+		</div>
+		<script>
+			var msg6 = new Vue({
+				el: '#msg6',
+				data: {
+					loginType: 'email'
+				},
+				methods: {
+					switchs: function() {
+						this.loginType = this.loginType === 'email' ? 'username' : 'email';
+					}
+				}
+			});
+		</script>
+		<div>那么在上面的代码中切换 loginType 将不会清除用户已经输入的内容。</div>
+		<div>因为两个模版使用了相同的元素，&lt;input&gt; 不会被替换掉——仅仅是替换了它的的 placeholder。</div>
+		<div>这样也不总是符合实际需求，所以 Vue 为你提供了一种方式来声明“这两个元素是完全独立的——不要复用它们”。</div>
+		<div>只需添加一个具有唯一值的 key 属性即可：</div>
+		<div id="msg7">
+			<template v-if="loginType === 'username'">
+				<label>Username</label>
+				<input placeholder="Enter your username" key="username-input">
+			</template>
+			<template v-else>
+				<label>Email</label>
+				<input placeholder="Enter your email address" key="email-input">
+			</template>
+			<button v-on:click="switchs">你好</button>
+		</div>
+		<script>
+			var msg7 = new Vue({
+				el: '#msg7',
+				data: {
+					loginType: 'email'
+				},
+				methods: {
+					switchs: function() {
+						this.loginType = this.loginType === 'email' ? 'username' : 'email';
+					}
+				}
+			});
+		</script>
+		<div>注意, &lt;label&gt; 元素仍然会被高效地复用，因为它们没有添加 key 属性。</div>
+		<h2>v-show</h2>
+		<div>另一个用于根据条件展示元素的选项是 v-show 指令。用法大致一样：</div>
+		<h1 id="msg8" v-show="ok">Hello!</h1>
+		<script>
+			var msg8 = new Vue({
+				el: '#msg8',
+				data: {
+					ok: true
+				}
+			});
+		</script>
+		<div>不同的是带有 v-show 的元素始终会被渲染并保留在 DOM 中。v-show 是简单地切换元素的 CSS 属性 display 。</div>
+		<p>注意， v-show 不支持 &lt;template&gt; 语法，也不支持 v-else。</p>
+		<h2>v-if vs v-show</h2>
+		<p>v-if 是“真正的”条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。</p>
+		<p>v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。</p>
+		<p>相比之下， v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。</p>
+		<div>一般来说， v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。</div>
+		<div>因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件不太可能改变，则使用 v-if 较好。</div>
+		<h2>v-if 与 v-for 一起使用</h2>
+		<div>当 v-if 与 v-for 一起使用时，v-for 具有比 v-if 更高的优先级。</div>
+		<div>请查阅 列表渲染指南 以获取详细信息。</div>
+	</body>
+
+</html>

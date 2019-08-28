@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div id="test1">
+			<select v-model="select1">
+				<option value="1">1</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+			</select>
+			<div id="none1" style="display: none;">
+				<select v-model="select2">
+					<option value="2">2</option>
+					<option value="22">22</option>
+					<option value="23">23</option>
+					<option value="24">24</option>
+					<option value="25">25</option>
+				</select>
+			</div>
+{{select2}}
+		</div>
+
+		<script>
+			var vm = new Vue({
+				el: '#test1',
+				data: {
+					select1: '12',
+					select2: '22'
+				},
+				watch: {
+					select1: function(value) {
+						if(value == 13){
+			
+							document.getElementById("none1").style.display="block"
+						}
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

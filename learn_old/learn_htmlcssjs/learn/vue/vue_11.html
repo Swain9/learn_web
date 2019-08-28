@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>组件</title>
+		<script type="text/javascript" src="js/vue.js"></script>
+		<script type="text/javascript" src="js/currencyValidator.js"></script>
+		<style>
+			h2 {
+				color: #FF0000;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>组件</h1>
+		<h2>什么是组件？</h2>
+		<hr />
+		<div>组件（Component）是 Vue.js 最强大的功能之一。组件可以扩展 HTML 元素，封装可重用的代码。</div>
+		<div>在较高层面上，组件是自定义元素， Vue.js 的编译器为它添加特殊功能。</div>
+		<div>在有些情况下，组件也可以是原生 HTML 元素的形式，以 is 特性扩展。</div>
+		<h2>使用组件</h2>
+		<h3>注册</h3>
+		<p>之前说过，我们可以通过以下方式创建一个 Vue 实例：</p>
+		<div>new Vue({ el: '#some-element', // 选项 })</div>
+		<p>要注册一个全局组件，你可以使用 Vue.component(tagName, options)。 例如：</p>
+		<div>Vue.component('my-component', { // 选项 })</div>
+		<p>对于自定义标签名，Vue.js 不强制要求遵循 W3C规则 （小写，并且包含一个短杠），尽管遵循这个规则比较好。</p>
+		<div>组件在注册之后，便可以在父实例的模块中以自定义元素 &lt;my-component&gt;&lt;/my-component&gt; 的形式使用。
+		</div>
+		<div>要确保在初始化根实例 之前 注册了组件：</div>
+		<div id="test1">
+			<my-component></my-component>
+		</div>
+		<script>
+			Vue.component('my-component', {
+				template: '<input type=\'text\' />'
+			});
+			var test1 = new Vue({
+				el: '#test1'
+			});
+		</script>
+		<h3>局部注册</h3>
+		<p>不必在全局注册每个组件。通过使用组件实例选项注册，可以使组件仅在另一个实例/组件的作用域中可用：</p>
+		<div id="temp1">
+			<my-component v-on:click="myclick('hello',$event)"></my-component>
+			<my-component1 v-on:click="myclick('click2',$event)"></my-component1>
+			<button is='my-component1' @click="myclick('click3',$event)">他好</button>
+		</div>
+		<script>
+			Vue.component('my-component1');
+			var child1 = {
+				template: '<button v-on:click="$emit(\'click\')">你好</button>'
+			};
+			var child2 = {
+				template: '<button v-on:click="$emit(\'click\')">我好</button>'
+			};
+			var temp1 = new Vue({
+				el: '#temp1',
+				methods: {
+					myclick: function(msg, e) {
+						alert(msg);
+					}
+				},
+				components: {
+					// <my-component> 将只在父模板可用
+					'my-component': child2,
+					'my-component1': child1
+				}
+			});
+		</script>
+		<p>这种封装也适用于其它可注册的 Vue 功能，如指令。</p>
+		<h3>DOM 模版解析说明</h3>
+		<div>当使用 DOM 作为模版时（例如，将 el 选项挂载到一个已存在的元素上）, 你会受到 HTML 的一些限制，</div>
+		<div>因为 Vue 只有在浏览器解析和标准化 HTML 后才能获取模版内容。尤其像这些元素 &lt;ul&gt; ，&lt;ol&gt;，&lt;table&gt;，&lt;select&gt;</div>
+		<div>限制了能被它包裹的元素， 而一些像 &lt;option&gt; 这样的元素只能出现在某些其它元素内部。</div>
+		<p>在自定义组件中使用这些受限制的元素时会导致一些问题，例如：</p>
+		<div>
+			&lt;table&gt; &lt;my-row&gt;...&lt;/my-row&gt; &lt;/table&gt;
+		</div>
+		<p>自定义组件
+			<my-row> 被认为是无效的内容，因此在渲染的时候会导致错误。变通的方案是使用特殊的 is 属性：</p>
+		<div id="my_exm1">
+			<table border="1">
+				<tr is="my-row"></tr>
+			</table>
+		</div>
+		<script>
+			var my_row = {
+				template: '<tr><td>你好</td></tr>'
+			}
+			var my_exm1 = new Vue({
+				el: "#my_exm1",
+				components: {
+					'my-row': my_row
+				}
+			});
+		</script>
+		<p>应当注意，如果您使用来自以下来源之一的字符串模板，这些限制将不适用：</p>
+		<ul>
+			<li>&lt;script type="text/x-template"&gt;</li>
+			<li>JavaScript内联模版字符串</li>
+			<li>.vue 组件</li>
+		</ul>
+		<div>因此，有必要的话请使用字符串模版。</div>
+		<h3>data 必须是函数</h3>
+		<div>通过Vue构造器传入的各种选项大多数都可以在组件里用。 data 是一个例外，它必须是函数。 实际上，如果你这么做：</div>
+		<div>
+			Vue.component('my-component2', { template: '<span>{{ message }}</span>', data: { message: 'hello' } });
+		</div>
+		<div>那么 Vue 会停止，并在控制台发出警告，告诉你在组件中 data 必须是一个函数。</div>
+		<div>理解这种规则的存在意义很有帮助，让我们假设用如下方式来绕开Vue的警告：</div>
+		<div id="example-2">
+			<simple-counter v-bind:mytest2='mytest2' v-bind:counter2='counter2'></simple-counter>
+			<simple-counter></simple-counter>
+			<simple-counter v-bind:mytest2='mytest2'></simple-counter>
+		</div>
+		<script>
+			var data = {
+				counter: 0,
+				mytest: '哎哟'
+			};
+			Vue.component('simple-counter', {
+				props: ['mytest2', 'counter2'],
+				template: '<button v-on:click="counter += 1">{{ counter }}+{{mytest}}={{mytest2}}+{{counter2}}</button>',
+				// data is technically a function, so Vue won't
+				// complain, but we return the same object
+				// reference for each component instance
+				data: function() {
+					//return data;
+					return {
+						counter: 0,
+						mytest: 'ceshi1'
+					};
+				}
+			});
+			new Vue({
+				el: '#example-2',
+				data: {
+					mytest2: 'ceshi2',
+					counter2: 1
+				},
+				computed: {
+					countNum: {
+						get: function() {
+							return this.counter2;
+						},
+						set: function(value) {
+							this.conuter2 = value;
+						}
+					}
+				}
+			});
+		</script>
+		<div>由于这三个组件共享了同一个 data ， 因此增加一个 counter 会影响所有组件！这不对。我们可以通过为每个组件返回全新的 data 对象来解决这个问题：</div>
+		<div>data: function () { return { counter: 0 } }</div>
+		<h3>构成组件</h3>
+		<div>组件意味着协同工作，通常父子组件会是这样的关系：组件 A 在它的模版中使用了组件 B 。</div>
+		<div>它们之间必然需要相互通信：父组件要给子组件传递数据，子组件需要将它内部发生的事情告知给父组件。</div>
+		<div>然而，在一个良好定义的接口中尽可能将父子组件解耦是很重要的。</div>
+		<div>这保证了每个组件可以在相对隔离的环境中书写和理解，也大幅提高了组件的可维护性和可重用性。</div>
+		<p>在 Vue.js 中，父子组件的关系可以总结为 props down, events up 。<br/> 父组件通过 props 向下传递数据给子组件，子组件通过 events 给父组件发送消息。看看它们是怎么工作的。</p>
+		<p><img style="width: 200px;height: 200px;" src="../img/props-events.png" /></p>
+		<h2>Prop</h2>
+		<h3>使用 Prop 传递数据</h3>
+		<div>组件实例的作用域是孤立的。这意味着不能(也不应该)在子组件的模板内直接引用父组件的数据。</div>
+		<div>要让子组件使用父组件的数据，我们需要通过子组件的props选项。</div>
+		<p>子组件要显式地用 props 选项声明它期待获得的数据：</p>
+
+		<p>然后我们可以这样向它传入一个普通字符串：</p>
+		<div id="my_exm2">
+			<child message="hello!"></child>
+		</div>
+		<script>
+			Vue.component('child', {
+				// 声明 props
+				props: ['message'],
+				// 就像 data 一样，prop 可以用在模板内
+				// 同样也可以在 vm 实例中像 “this.message” 这样使用
+				template: '<span>{{ message }}</span>'
+			});
+			var my_exm2 = new Vue({
+				el: "#my_exm2"
+			});
+		</script>
+		<h3>camelCase vs. kebab-case</h3>
+		<div>HTML 特性是不区分大小写的。所以，当使用的不是字符串模版，camelCased (驼峰式) 命名的 prop 需要转换为相对应的 kebab-case (短横线隔开式) 命名：</div>
+		<div>Vue.component('child', { // camelCase in JavaScript props: ['myMessage'], template: '<span>{{ myMessage }}</span>' })
+		</div>
+		<div>
+			&lt;!-- kebab-case in HTML --&gt; &lt;child my-message="hello!"&gt;&lt;/child&gt;
+		</div>
+		<div>如果你使用字符串模版，则没有这些限制。</div>
+		<h3>动态 Prop</h3>
+		<div>在模板中，要动态地绑定父组件的数据到子模板的props，与绑定到任何普通的HTML特性相类似，就是用 v-bind。</div>
+		<div>每当父组件的数据变化时，该变化也会传导给子组件：</div>
+		<div id="my_exm3">
+			<input v-model="parentMsg">
+			<br>
+			<child v-bind:my-message="parentMsg"></child>
+		</div>
+		<script>
+			Vue.component('child', {
+				// 声明 props
+				props: ['myMessage'],
+				// 就像 data 一样，prop 可以用在模板内
+				// 同样也可以在 vm 实例中像 “this.myMessage” 这样使用
+				template: '<span>{{ myMessage }}</span>'
+			});
+			var my_exm3 = new Vue({
+				el: "#my_exm3",
+				data: {
+					parentMsg: '请输入'
+				}
+			});
+		</script>
+		<h3>字面量语法 vs 动态语法</h3>
+		<div>初学者常犯的一个错误是使用字面量语法传递数值：</div>
+		<div id="my_exm4">
+			&lt;!-- 传递了一个字符串 "1" --&gt;
+			<comp some-prop="1"></comp>
+			<comp :some-prop="1"></comp>
+		</div>
+		<script>
+			Vue.component('comp', {
+				props: ['someProp'],
+				template: '<span>{{typeof someProp}}</span>'
+			});
+			var my_exm4 = new Vue({
+				el: '#my_exm4'
+			});
+		</script>
+		<h3>单向数据流</h3>
+		<div>prop 是单向绑定的：当父组件的属性变化时，将传导给子组件，但是不会反过来。这是为了防止子组件无意修改了父组件的状态——这会让应用的数据流难以理解。</div>
+		<p>另外，每次父组件更新时，子组件的所有 prop 都会更新为最新值。这意味着你不应该在子组件内部改变 prop 。如果你这么做了，Vue 会在控制台给出警告。</p>
+		<p>为什么我们会有修改prop中数据的冲动呢？通常是这两种原因：</p>
+		<ul>
+			<li>prop 作为初始值传入后，子组件想把它当作局部数据来用；</li>
+			<li>prop 作为初始值传入，由子组件处理成其它数据输出。</li>
+		</ul>
+		<div>对这两种原因，正确的应对方式是：</div>
+		<ul>
+			<li>定义一个局部变量，并用 prop 的值初始化它：</li>
+			<li>定义一个计算属性，处理 prop 的值并返回。</li>
+		</ul>
+		<div id="my_exm5">
+			<input is='myexm1' :initial-counter='initialCounter' />{{initialCounter}}
+			<input is='myexm2' :size='size' />{{size}}
+			<input is='myexm3' :mynum='mynums' />{{mynums}}
+		</div>
+		<script>
+			Vue.component('myexm1', {
+				props: ['initialCounter'],
+				template: '<input type=\'text\' v-bind:value=\'counter\'/>',
+				data: function() {
+					return {
+						counter: this.initialCounter
+					};
+				}
+			});
+			Vue.component('myexm2', {
+				props: ['size'],
+				template: '<input type=\'text\' v-bind:value=\'normalizedSize\'/>',
+				computed: {
+					normalizedSize: function() {
+						return this.size.trim().toLowerCase();
+					}
+				}
+			});
+			Vue.component('myexm3', {
+				props: ['mynum'],
+				template: '<input type=\'text\'  v-bind:value=\'normalizedSize\'/>',
+				computed: {
+					normalizedSize: {
+						get: function() {
+							return this.mynum + 100;
+						},
+						set: function(value) {
+							this.mynum = value;
+						}
+					}
+				}
+			});
+			var my_exm5 = new Vue({
+				el: "#my_exm5",
+				data: {
+					initialCounter: 111,
+					size: '   ABCD AAA ',
+					mynums: 222
+				}
+			});
+		</script>
+		<p>注意在 JavaScript 中对象和数组是引用类型，指向同一个内存空间，如果 prop 是一个对象或数组，在子组件内部改变它会影响父组件的状态。</p>
+		<h3>Prop 验证</h3>
+		<div>我们可以为组件的 props 指定验证规格。如果传入的数据不符合规格，Vue 会发出警告。当组件给其他人使用时，这很有用。</div>
+		<p>要指定验证规格，需要用对象的形式，而不能用字符串数组：</p>
+		<div id="my_exm6">
+			<example v-bind:prop-a='msg' prop-b='2222' prop-c='aaaa' :prop-f='11'></example>
+		</div>
+		<script>
+			Vue.component('example', {
+				props: {
+					// 基础类型检测 （`null` 意思是任何类型都可以）
+					propA: Number,
+					// 多种类型
+					propB: [String, Number],
+					// 必传且是字符串
+					propC: {
+						type: String,
+						required: true
+					},
+					// 数字，有默认值
+					propD: {
+						type: Number,
+						default: 100
+					},
+					// 数组／对象的默认值应当由一个工厂函数返回
+					propE: {
+						type: Object,
+						default: function() {
+							return {
+								message: 'hello'
+							};
+						}
+					},
+					// 自定义验证函数
+					propF: {
+						validator: function(value) {
+							return value > 10;
+						}
+					}
+				},
+				template: '<input type=\'text\' v-bind:value=\'propA+propB+propC+propD+propE.message+propF\' />',
+			});
+		</script>
+		<script>
+			var my_exm6 = new Vue({
+				el: '#my_exm6',
+				data: {
+					msg: 1111
+				}
+			});
+		</script>
+		<div>type 可以是下面原生构造器：</div>
+		<ul>
+			<li>String</li>
+			<li>Number</li>
+			<li>Boolean</li>
+			<li>Function</li>
+			<li>Object</li>
+			<li>Array</li>
+		</ul>
+		<div>type 也可以是一个自定义构造器函数，使用 instanceof 检测。</div>
+		<div>当 prop 验证失败，Vue会在抛出警告 (如果使用的是开发版本)。</div>
+		<h2>自定义事件</h2>
+		<hr />
+		<div>我们知道，父组件是使用 props 传递数据给子组件，但如果子组件要把数据传递回去，应该怎样做？那就是自定义事件！</div>
+		<h3>使用 v-on 绑定自定义事件</h3>
+		<div>每个 Vue 实例都实现了事件接口(Events interface)，即：</div>
+		<ul>
+			<li>使用 $on(eventName) 监听事件</li>;
+			<li>使用 $emit(eventName) 触发事件</li>
+		</ul>
+		<p>Vue的事件系统分离自浏览器的EventTarget API。尽管它们的运行类似，但是$on 和 $emit 不是addEventListener 和 dispatchEvent 的别名。</p>
+		<div>另外，父组件可以在使用子组件的地方直接用 v-on 来监听子组件触发的事件。</div>
+		<div>不能用$on侦听子组件抛出的事件，而必须在模板里直接用v-on绑定，就像以下的例子：</div>
+		<div id="counter-event-example">
+			<p>{{ total }}</p>
+			<button-counter v-on:increment1="incrementTotal"></button-counter>
+			<button-counter v-on:increment1="incrementTotal"></button-counter>
+		</div>
+		<script>
+			Vue.component('button-counter', {
+				template: '<button v-on:click="increment2">{{ counter }}</button>',
+				data: function() {
+					return {
+						counter: 0
+					};
+				},
+				methods: {
+					increment2: function() {
+						this.counter += 1;
+						this.$emit('increment1');
+					}
+				},
+			});
+			new Vue({
+				el: '#counter-event-example',
+				data: {
+					total: 0
+				},
+				methods: {
+					incrementTotal: function() {
+						this.total += 1;
+					}
+				}
+			});
+		</script>
+		<div>在本例中，子组件已经和它外部完全解耦了。它所做的只是报告自己的内部事件，至于父组件是否关心则与它无关。留意到这一点很重要。</div>
+		<h3>给组件绑定原生事件</h3>
+		<div>有时候，你可能想在某个组件的根元素上监听一个原生事件。可以使用 .native 修饰 v-on 。例如：</div>
+		<div id="my_exm7">
+			<my-component-a v-on:click="doTheThing1" v-bind:href3='href1' v-bind:name3='name1'></my-component-a>
+			<my-component-a v-on:click.native="doTheThing2" v-bind:href3='href2' v-bind:name3='name2'></my-component-a>
+		</div>
+		<script>
+			Vue.component('my-component-a', {
+				props: ['href3', 'name3'],
+				template: '<a v-bind:href=\'href3\' v-on:click=\'doThis\'>{{name3}}</a>',
+				methods: {
+					doThis: function() {
+						alert(this.href3);
+					}
+				}
+			});
+			var my_exm7 = new Vue({
+				el: '#my_exm7',
+				data: {
+					href1: 'http://www.baidu.com/',
+					name1: 'baidu',
+					href2: 'http://www.qq.com/',
+					name2: 'QQ'
+				},
+				methods: {
+					doTheThing1: function() {
+						//doTheThing2不写就会报错
+						alert(this.href1);
+					},
+					doTheThing2: function() {
+						//doTheThing2写不写都不会报错
+						alert(this.href2);
+					}
+				}
+			});
+		</script>
+		<h3>.sync Modifier</h3>
+		<p>2.3.0+</p>
+		<div>In some cases we may need “two-way binding” for a prop - in fact, in Vue 1.x this is exactly what the</div>
+		<div> .sync modifier provided. When a child component mutates a prop that has .sync, </div>
+		<div>the value change will be reflected in the parent. This is convenient, </div>
+		<div>however it leads to maintenance issues in the long run because it breaks the one-way data flow assumption: </div>
+		<div>the code that mutates child props are implicitly affecting parent state.</div>
+		<p></p>
+		<div>This is why we removed the .sync modifier when 2.0 was released. However, </div>
+		<div>we’ve found that there are indeed cases where it could be useful, especially when shipping reusable components. </div>
+		<div>What we need to change is making the code in the child that affects parent state more consistent and explicit.</div>
+		<p></p>
+		<div>In 2.3 we re-introduced the .sync modifier for props, but this time it is just syntax sugar that </div>
+		<div>automatically expands into an additional v-on listener:</div>
+		<div id="my_exm8">
+			<!--<my-comp-test1 v-bind:foo.sync="c_bar"></my-comp-test1>-->
+			<!--有ES6语法,可能存在兼容性问题-->
+			<!--<my-comp-test1 :foo="c_bar" @update:foo="val => c_bar = val"></my-comp-test1>-->
+			<my-comp-test1 :foo="c_bar" @update:foo="change_bar"></my-comp-test1>
+			<!--正确用法，和watch相匹配-->
+			<my-comp-test1 :foo.sync="c_bar"></my-comp-test1>
+			{{bar}}
+		</div>
+		<script>
+			Vue.component('my-comp-test1', {
+				props: ['foo'],
+				template: '<input v-model="newfoo" />',
+				data: function() {
+					return {
+						newfoo: this.foo
+					}
+				},
+				watch: {
+					newfoo: function(newVal, oldVal) {
+						alert(newVal);
+						alert(oldVal);
+						this.$emit('update:foo', newVal);
+					}
+				}
+			});
+			var my_exm8 = new Vue({
+				el: '#my_exm8',
+				data: {
+					bar: '同步测试'
+				},
+				computed: {
+					c_bar: {
+						get: function() {
+							return this.bar;
+						},
+						set: function(value) {
+							this.bar = value;
+						}
+					}
+				},
+				methods: {
+					change_bar: function(value) {
+						this.c_bar = value;
+					}
+				}
+			});
+		</script>
+		<h3>使用自定义事件的表单输入组件</h3>
+		<div>自定义事件可以用来创建自定义的表单输入组件，使用 v-model 来进行数据双向绑定。看看这个：</div>
+		<p>&lt;input v-model="something"&gt;</p>
+		<div>这不过是以下示例的语法糖：</div>
+		<div>&lt;input v-bind:value="something" v-on:input="something = $event.target.value"&gt;</div>
+		<p>所以在组件中使用时，它相当于下面的简写：</p>
+		<div>&lt;custom-input :value="something" @input="value => { something = value }"&gt;&lt;/custom-input&gt;</div>
+		<p>所以要让组件的 v-model 生效，它必须：</p>
+		<ul>
+			<li>接受一个 value 属性</li>
+			<li>在有新的 value 时触发 input (html5)事件</li>
+		</ul>
+		<div>我们来看一个非常简单的货币输入的自定义控件：</div>
+		<div id="my_exm9">
+			<currency-input v-model="price"></currency-input>
+			{{price}}
+		</div>
+		<script>
+			Vue.component('currency-input', {
+				props: ['value'],
+				template: '<span>$<input ref="input" v-bind:value="value" v-on:input="updateValue($event.target.value)"></span>',
+				methods: {
+					//不是直接更新值，而是使用此方法来对输入值进行格式化和位数限制
+					updateValue: function(value) {
+						var formattedValue = value
+							// 删除两侧的空格符
+							.trim()
+							// 保留 2 小数位
+							.slice(0, value.indexOf('.') === -1 ? 10 : value.indexOf('.') + 3);
+						// 如果值不统一，手动覆盖以保持一致
+						if(formattedValue !== value) {
+							this.$refs.input.value = formattedValue;
+						}
+						// 通过 input 事件发出数值
+						this.$emit('input', Number(formattedValue));
+					}
+				}
+			});
+			new Vue({
+				el: '#my_exm9',
+				data: {
+					price: 0
+				}
+			});
+		</script>
+		<div>当然，上面的例子是比较幼稚的。 比如，用户甚至可以输入多个小数点或句号 - 哦哦！</div>
+		<div>因此我们需要一个更有意义的例子，下面是一个更加完善的货币过滤器：</div>
+		<div id="app">
+			<currency-input label="Price" v-model="price"></currency-input>
+			<currency-input label="Shipping" v-model="shipping"></currency-input>
+			<currency-input label="Handling" v-model="handling"></currency-input>
+			<currency-input label="Discount" v-model="discount"></currency-input>
+
+			<p>Total: ${{ total }}</p>
+		</div>
+		<script>
+			Vue.component('currency-input', {
+				template: '<div><label v-if="label">{{ label }}</label>' +
+					'$<input ref="input" v-bind:value="value" v-on:input="updateValue($event.target.value)" v-on:focus="selectAll" v-on:blur="formatValue">' +
+					'</div>',
+				props: {
+					value: {
+						type: Number,
+						default: 0
+					},
+					label: {
+						type: String,
+						default: ''
+					}
+				},
+				mounted: function() {
+					//被el挂载的时候
+					this.formatValue();
+				},
+				methods: {
+					updateValue: function(value) {
+						var result = currencyValidator.parse(value, this.value);
+						if(result.warning) {
+							this.$refs.input.value = result.value;
+						}
+						this.$emit('input', result.value);
+					},
+					formatValue: function() {
+						this.$refs.input.value = currencyValidator.format(this.value);
+					},
+					selectAll: function(event) {
+						// Workaround for Safari bug
+						// http://stackoverflow.com/questions/1269722/selecting-text-on-focus-using-jquery-not-working-in-safari-and-chrome
+						setTimeout(function() {
+							event.target.select()
+						}, 0);
+					}
+				}
+			});
+			new Vue({
+				el: '#app',
+				data: {
+					price: 0,
+					shipping: 0,
+					handling: 0,
+					discount: 0
+				},
+				computed: {
+					total: function() {
+						return((
+							this.price * 100 +
+							this.shipping * 100 +
+							this.handling * 100 -
+							this.discount * 100
+						) / 100).toFixed(2);
+					}
+				}
+			});
+		</script>
+		<div>事件接口不仅仅可以用来连接组件内部的表单输入，也很容易集成你自己创造的输入类型。想象一下：</div>
+		<div>
+			&lt;voice-recognizer v-model="question"&gt;&lt;/voice-recognizer&gt; &lt;webcam-gesture-reader v-model="gesture"&gt;&lt;/webcam-gesture-reader&gt; &lt;webcam-retinal-scanner v-model="retinalImage"&gt;&lt;/webcam-retinal-scanner&gt;
+		</div>
+		<h3>Customizing Component v-model</h3>
+		<p>New in 2.2.0</p>
+		<div>By default, v-model on a component uses value as the prop and input as the event, </div>
+		<div>but some input types such as checkboxes and radio buttons may want to use the value prop for a different purpose. </div>
+		<div>Using the model option can avoid the conflict in such cases:</div>
+		<div id="my_exm10">
+			<my-checkbox v-model="foo" value="some value"></my-checkbox>
+			<my-checkbox :checked="foo" @change="val => { foo = val }" value="some value"></my-checkbox>
+			{{foo}}
+		</div>
+		<script>
+			Vue.component('my-checkbox', {
+				model: {
+					prop: 'checked',
+					event: 'change'
+				},
+				props: {
+					// this allows using the `value` prop for a different purpose
+					value: String,
+					checked: Boolean
+				},
+				mounted: function() {
+					this.$refs.input.value = this.value + 'change';
+					this.$refs.input.checked = this.checked;
+				},
+				template: '<div><input ref="input" type="checkbox" v-on:change="changeValue($event)"/>{{value}}</div>',
+				methods: {
+					changeValue: function(e) {
+						this.$emit('change', e.target.checked);
+					}
+				}
+			});
+			var my_exm10 = new Vue({
+				el: '#my_exm10',
+				data: {
+					foo: true
+				}
+			});
+		</script>
+		<div>The above will be equivalent to:</div>
+		<h3>非父子组件通信</h3>
+		<div>有时候两个组件也需要通信(非父子关系)。在简单的场景下，可以使用一个空的 Vue 实例作为中央事件总线：</div>
+		<div id="bus1">
+			<my-bus1></my-bus1>
+			<my-bus2></my-bus2>
+		</div>
+		<script>
+			var mybus = new Vue();
+			// 在组件 B 创建的钩子中监听事件
+			mybus.$on('id-selected', function(id) {
+				console.log(id);
+			});
+			// 触发组件 A 中的事件
+			mybus.$emit('id-selected', 1);
+
+			var bus = new Vue();
+			Vue.component('my-bus1', {
+				template: '<div><input type="text" v-model="msg" v-on:input="changeValue"/>{{msg}}</div>',
+				methods: {
+					changeValue: function() {
+						bus.$emit('my-input', this.msg);
+					}
+				},
+				data: function() {
+					return {
+						msg: ''
+					}
+				}
+			});
+			Vue.component('my-bus2', {
+				template: '<div><input ref="input" type="text" v-model="msg"/>{{msg}}</div>',
+				mounted: function() {
+					var newValue = this.changeValue;
+					bus.$on('my-input', function(value) {
+						newValue(value);
+					});
+				},
+				data: function() {
+					return {
+						msg: ''
+					}
+				},
+				methods: {
+					changeValue: function(value) {
+						this.msg = value;
+					}
+				},
+				watch: {
+					msg: function(newVal, oldVal) {
+						console.log(newVal);
+						console.log(oldVal);
+						//this.$refs.input.value = newVal;
+					}
+				}
+			});
+			var mybus1 = new Vue({
+				el: '#bus1'
+			});
+		</script>
+		<div>在复杂的情况下，我们应该考虑使用专门的 状态管理模式.</div>
+		<h2>使用 Slot 分发内容</h2>
+		<hr />
+		<p>在使用组件时，我们常常要像这样组合它们：</p>
+		<div>
+			&lt;app&gt; &lt;app-header&gt;&lt;/app-header&gt; &lt;app-footer&gt;&lt;/app-footer&gt; &lt;/app&gt;
+		</div>
+		<div>注意两点：</div>
+		<ol>
+			<li>
+				&lt;app&gt; 组件不知道它的挂载点会有什么内容。挂载点的内容是由 &lt;app&gt;的父组件决定的。
+			</li>
+			<li>&lt;app&gt; 组件很可能有它自己的模版。</li>
+		</ol>
+		<div>为了让组件可以组合，我们需要一种方式来混合父组件的内容与子组件自己的模板。</div>
+		<div>这个过程被称为 内容分发 (或 “transclusion” 如果你熟悉 Angular)。Vue.js 实现了一个内容分发 API ，</div>
+		<div>参照了当前 Web 组件规范草案，使用特殊的 &lt;slot&gt; 元素作为原始内容的插槽。</div>
+		<h3>编译作用域</h3>
+		<div>在深入内容分发 API 之前，我们先明确内容在哪个作用域里编译。假定模板为：</div>
+		<div>
+			&lt;child-component&gt; {{ message }} &lt;/child-component&gt;
+		</div>
+		<p>message 应该绑定到父组件的数据，还是绑定到子组件的数据？答案是父组件。组件作用域简单地说是：</p>
+		<p>父组件模板的内容在父组件作用域内编译；子组件模板的内容在子组件作用域内编译。</p>
+		<p>一个常见错误是试图在父组件模板内将一个指令绑定到子组件的属性/方法：</p>
+		<div>
+			&lt;!-- 无效 --&gt; &lt;child-component v-show="someChildProperty"&gt;&lt;/child-component&gt;
+		</div>
+		<div>假定 someChildProperty 是子组件的属性，上例不会如预期那样工作。父组件模板不应该知道子组件的状态。</div>
+		<div>如果要绑定作用域内的指令到一个组件的根节点，你应当在组件自己的模板上做：</div>
+		<script>
+			Vue.component('child-component', {
+				// 有效，因为是在正确的作用域内
+				template: '<div v-show="someChildProperty">Child</div>',
+				data: function() {
+					return {
+						someChildProperty: true
+					};
+				}
+			});
+		</script>
+		<div>类似地，分发内容是在父作用域内编译。</div>
+		<h3>单个 Slot</h3>
+		<div>除非子组件模板包含至少一个 &lt;slot&gt; 插口，否则父组件的内容将会被丢弃。当子组件模板只有一个没有属性的 slot 时，</div>
+		<div>父组件整个内容片段将插入到 slot 所在的 DOM 位置，并替换掉 slot 标签本身。</div>
+		<div>最初在 &lt;slot&gt; 标签中的任何内容都被视为备用内容。备用内容在子组件的作用域内编译，并且只有在宿主元素为空，且没有要插入的内容时才显示备用内容。</div>
+		<P>假定 my-component 组件有下面模板：</P>
+		<div id="my_exm11">
+			<div>我是父组件的标题</div>
+			<comp-1>
+				<p>这是一些初始内容</p>
+				<p>这是更多的初始内容</p>
+			</comp-1>
+			<comp-1></comp-2>
+		</div>
+		<script>
+			Vue.component('comp-1', {
+				template: '<div><div>我是子组件的标题</div><slot>只有在没有要分发的内容时才会显示。</slot></div>'
+			});
+			var my_exm11 = new Vue({
+				el: "#my_exm11"
+			})
+		</script>
+		<h3>具名 Slot</h3>
+		<div>&lt;slot&gt; 元素可以用一个特殊的属性 name 来配置如何分发内容。多个 slot 可以有不同的名字。具名 slot 将匹配内容片段中有对应 slot 特性的元素。</div>
+		<div>仍然可以有一个匿名 slot ，它是默认 slot ，作为找不到匹配的内容片段的备用插槽。如果没有默认的 slot ，这些找不到匹配的内容片段将被抛弃。</div>
+		<p>例如，假定我们有一个 app-layout 组件，它的模板为：</p>
+		<div>
+			<app-layout id="my_exm12">
+				<h1 slot="header">这里可能是一个页面标题</h1>
+				<p>主要内容的一个段落。</p>
+				<p>另一个主要段落。</p>
+				<p slot="footer">这里有一些联系信息</p>
+			</app-layout>
+		</div>
+		<script>
+			Vue.component('app-layout', {
+				template: '<div class="container"><header><slot name="header"></slot></header><main><slot></slot></main><footer><slot name="footer"></slot></footer></div>'
+			});
+			var my_exm12 = new Vue({
+				el: "#my_exm12"
+			});
+		</script>
+		<div>在组合组件时，内容分发 API 是非常有用的机制。</div>
+		<h3>作用域插槽</h3>
+		<p>2.1.0 新增</p>
+		<p>作用域插槽是一种特殊类型的插槽，用作使用一个（能够传递数据到）可重用模板替换已渲染元素。</p>
+		<p>在子组件中，只需将数据传递到插槽，就像你将 prop 传递给组件一样：</p>
+		<div>
+			&lt;div class="child"&gt; &lt;slot text="hello from child"&gt;&lt;/slot&gt; &lt;/div&gt;
+		</div>
+		<div>在父级中，具有特殊属性 scope 的 &lt;template&gt; 元素，表示它是作用域插槽的模板。scope 的值对应一个临时变量名，此变量接收从子组件中传递的 prop 对象：</div>
+		<div>如果我们渲染以上结果，得到的输出会是：</div>
+		<div class="parent" id="my_exm13">
+			<childs>
+				<template scope="aa">
+					<span>hello from parent</span>
+					<span>{{ aa.bb }}</span>
+				</template>
+			</childs>
+		</div>
+		<script>
+			Vue.component('childs', {
+				template: '<div class="child"><slot bb="hello from child"></slot></div>'
+			});
+			var my_exm13 = new Vue({
+				el: "#my_exm13"
+			});
+		</script>
+		<p>作用域插槽更具代表性的用例是列表组件，允许组件自定义应该如何渲染列表每一项：</p>
+		<my-awesome-list :items2="items1" id="my_exm14">
+			<!-- 作用域插槽也可以是具名的 -->
+			<template slot="item3" scope="ps">
+				<li class="my-fancy-item">{{ ps.txt }}</li>
+			</template>
+		</my-awesome-list>
+		<script>
+			Vue.component('my-awesome-list', {
+				props: ['items2'],
+				template: '<ul><slot name="item3" v-for="item4 in items2" :txt="item4.text"><!-- 这里写入备用内容 --></slot></ul>'
+			});
+			var my_exm14 = new Vue({
+				el: "#my_exm14",
+				data: {
+					items1: [{
+						text: 'a'
+					}, {
+						text: 'b'
+					}, {
+						text: 'c'
+					}, {
+						text: 'd'
+					}, {
+						text: 'e'
+					}, {
+						text: 'f'
+					}]
+				}
+			});
+		</script>
+		<h2>动态组件</h2>
+		<div>通过使用保留的 &lt;component&gt; 元素，动态地绑定到它的 is 特性，我们让多个组件可以使用同一个挂载点，并动态切换：</div>
+		<div>
+			<component v-bind:is="currentView" id="my_exm15">
+				<!-- 组件在 vm.currentview 变化时改变！ -->
+			</component>
+			<component v-bind:is="currentView" id="my_exm16">
+				<!-- 组件在 vm.currentview 变化时改变！ -->
+			</component>
+		</div>
+		<script>
+			var my_exm14 = new Vue({
+				el: '#my_exm15',
+				data: {
+					currentView: 'home'
+				},
+				components: {
+					home: {
+						template: '<input />'
+					},
+					posts: { /* ... */ },
+					archive: { /* ... */ }
+				}
+			});
+		</script>
+		<div>也可以直接绑定到组件对象上：</div>
+		<script>
+			var Home = {
+				template: '<p>Welcome home!</p>'
+			};
+			var my_exm16 = new Vue({
+				el: '#my_exm16',
+				data: {
+					currentView: Home
+				}
+			});
+		</script>
+		<h3>keep-alive</h3>
+		<div>如果把切换出去的组件保留在内存中，可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数：</div>
+		<keep-alive>
+			<component :is="currentView">
+				<!-- 非活动组件将被缓存！ -->
+			</component>
+		</keep-alive>
+		<div>在API 参考查看更多 &lt;keep-alive&gt; 的细节。</div>
+		<h2>杂项</h2>
+		<hr />
+		<h3>编写可复用组件</h3>
+		<div>在编写组件时，记住是否要复用组件有好处。一次性组件跟其它组件紧密耦合没关系，但是可复用组件应当定义一个清晰的公开接口。</div>
+		<div>Vue 组件的 API 来自三部分 - props, events 和 slots ：</div>
+		<ul>
+			<li>Props 允许外部环境传递数据给组件</li>
+			<li>Events 允许组件触发外部环境的副作用</li>
+			<li>Slots 允许外部环境将额外的内容组合在组件中。</li>
+		</ul>
+		<div>使用 v-bind 和 v-on 的简写语法，模板的缩进清楚且简洁：</div>
+		<div id="my_exm17">
+			<exm17 :foo="baz" :bar="qux" @event-a="doThis" @event-b="doThat">
+				<img slot="icon" style="width: 200px;height: 200px;" src="../img/props-events.png">
+				<p slot="main-text">Hello!</p>
+			</exm17>
+		</div>
+		<script>
+			Vue.component('exm17', {
+				props: ['foo', 'bar'],
+				template: '<div><div @click="doMyThis">doMyThis</div><div @click="doMyThat">doMyThat</div><slot name="icon"></slot>测试:{{foo}}+{{bar}}<slot name="main-text"></slot></div>',
+				methods: {
+					doMyThis: function() {
+						this.$emit('event-a');
+					},
+					doMyThat: function() {
+						this.$emit('event-b');
+					}
+				}
+			});
+			var my_exm17 = new Vue({
+				el: "#my_exm17",
+				data: {
+					baz: '你好',
+					qux: '是的'
+				},
+				methods: {
+					doThis: function() {
+						alert('触发了doThis');
+					},
+					doThat: function() {
+						alert('触发了doThat');
+					}
+				}
+			});
+		</script>
+		<h3>子组件索引</h3>
+		<div>尽管有 props 和 events ，但是有时仍然需要在 JavaScript 中直接访问子组件。为此可以使用 ref 为子组件指定一个索引 ID 。例如：</div>
+		<div id="parent">
+			<user-profile ref="profile"></user-profile>
+		</div>
+		<script>
+			Vue.component('user-profile', {
+				template: '<div>你好</div>'
+			});
+			var parent = new Vue({
+				el: '#parent'
+			});
+			// 访问子组件
+			var child = parent.$refs.profile;
+		</script>
+		<p>当 ref 和 v-for 一起使用时， ref 是一个数组或对象，包含相应的子组件。</p>
+		<p>$refs 只在组件渲染完成后才填充，并且它是非响应式的。它仅仅作为一个直接访问子组件的应急方案——应当避免在模版或计算属性中使用 $refs 。</p>
+		<h3>异步组件</h3>
+		<div>在大型应用中，我们可能需要将应用拆分为多个小模块，按需从服务器下载。为了让事情更简单，</div>
+		<div>Vue.js 允许将组件定义为一个工厂函数，动态地解析组件的定义。Vue.js 只在组件需要渲染时触发工厂函数，</div>
+		<div>并且把结果缓存起来，用于后面的再次渲染。例如：</div>
+		<script>
+			Vue.component('async-example', function(resolve, reject) {
+				setTimeout(function() {
+					// Pass the component definition to the resolve callback
+					resolve({
+						template: '<div>I am async!</div>'
+					});
+				}, 1000);
+			});
+		</script>
+		<div>工厂函数接收一个 resolve 回调，在收到从服务器下载的组件定义时调用。</div>
+		<div>也可以调用 reject(reason) 指示加载失败。这里 setTimeout 只是为了演示。</div>
+		<div>怎么获取组件完全由你决定。推荐配合使用 ：Webpack 的代码分割功能：</div>
+		<script>
+			Vue.component('async-webpack-example', function(resolve) {
+				// 这个特殊的 require 语法告诉 webpack
+				// 自动将编译后的代码分割成不同的块，
+				// 这些块将通过 Ajax 请求自动下载。
+				require(['./my-async-component'], resolve)
+			});
+		</script>
+		<div>你可以使用 Webpack 2 + ES2015 的语法返回一个 Promise resolve 函数：</div>
+		<div>
+			Vue.component( 'async-webpack-example', () => import('./my-async-component') );
+		</div>
+		<p>When using local registration, you can also directly provide a function that returns a Promise:</p>
+		<div>new Vue({ // ... components: { 'my-component': () => import('./my-async-component') } })</div>
+		<div>如果你是 Browserify 用户,可能就无法使用异步组件了,它的作者已经表明 Browserify 是不支持异步加载的。</div>
+		<div>Browserify 社区发现 一些解决方法，可能有助于已存在的复杂应用。对于其他场景，我们推荐简单实用 Webpack 构建，一流的异步支持</div>
+		<h3>Advanced Async Components</h3>
+		<p>New in 2.3.0</p>
+		<div>Starting in 2.3 the async component factory can also return an object of the following format:</div>
+		<div>
+			<div>const AsyncComp = () => ({ </div>
+			<div> // The component to load. Should be a Promise</div>
+			<div>component: import('./MyComp.vue'),</div>
+			<div>// A component to use while the async component is loading</div>
+			<div>loading: LoadingComp,</div>
+			<div> // A component to use if the load fails</div>
+			<div>error: ErrorComp,</div>
+			<div> // Delay before showing the loading component. Default: 200ms.</div>
+			<div> delay: 200,</div>
+			<div> // The error component will be displayed if a timeout is</div>
+			<div> // provided and exceeded. Default: Infinity.</div>
+			<div> timeout: 3000</div>
+			<div>})</div>
+		</div>
+		<div>Note that when used as a route component in vue-router, these properties will be ignored </div>
+		<div>because async components are resolved upfront before the route navigation happens. </div>
+		<div>You also need to use vue-router 2.4.0+ if you wish to use the above syntax for route components.</div>
+		<h3>组件命名约定</h3>
+		<div>当注册组件（或者 props）时，可以使用 kebab-case ，camelCase ，或 TitleCase 。Vue 不关心这个。</div>
+		<script>
+			var nameing = new Vue({
+				// 在组件定义中
+				components: {
+					// 使用 kebab-case 形式注册
+					'kebab-cased-component': { /* ... */ },
+					// register using camelCase
+					'camelCasedComponent': { /* ... */ },
+					// register using TitleCase
+					'TitleCasedComponent': { /* ... */ }
+				}
+			});
+		</script>
+		<p>在 HTML 模版中，请使用 kebab-case 形式：</p>
+		<!-- 在HTML模版中始终使用 kebab-case -->
+		<kebab-cased-component></kebab-cased-component>
+		<camel-cased-component></camel-cased-component>
+		<title-cased-component></title-cased-component>
+		<p>当使用字符串模式时，可以不受 HTML 的 case-insensitive 限制。这意味实际上在模版中，你可以使用 camelCase 、 TitleCase 或者 kebab-case 来引用：</p>
+		<!-- 在字符串模版中可以用任何你喜欢的方式! -->
+		<my-component></my-component>
+		<myComponent></myComponent>
+		<MyComponent></MyComponent>
+		<p>如果组件未经 slot 元素传递内容，你甚至可以在组件名后使用 / 使其自闭合：</p>
+		<my-component/>
+		<p>当然，这只在字符串模版中有效。因为自闭的自定义元素是无效的 HTML ，浏览器原生的解析器也无法识别它。</p>
+		<h3>递归组件</h3>
+		<p>组件在它的模板内可以递归地调用自己，不过，只有当它有 name 选项时才可以：</p>
+		<div>name: 'unique-name-of-my-component'</div>
+		<p>当你利用Vue.component全局注册了一个组件, 全局的ID作为组件的 name 选项，被自动设置.</p>
+		<div>Vue.component('unique-name-of-my-component', { // ... })</div>
+		<p>如果你不谨慎, 递归组件可能导致死循环:</p>
+		<div>
+			<!--name: 'stack-overflow',
+			template: '<div><stack-overflow></stack-overflow></div>'-->
+		</div>
+		<div>上面组件会导致一个错误 “max stack size exceeded” ，所以要确保递归调用有终止条件 (比如递归调用时使用 v-if 并让他最终返回 false )。</div>
+		<h3>组件间的循环引用Circular References Between Components</h3>
+		<div>假设你正在构建一个文件目录树，像在Finder或文件资源管理器中。你可能有一个 tree-folder组件:</div>
+		<p>
+			<span>{{ folder.name }}</span>
+			<tree-folder-contents :children="folder.children" />
+		</p>
+		<p>然后 一个tree-folder-contents组件：</p>
+		<ul>
+			<li v-for="child in children">
+				<tree-folder v-if="child.children" :folder="child" />
+				<span v-else>{{ child.name }}</span>
+			</li>
+		</ul>
+		<div>当你仔细看时，会发现在渲染树上这两个组件同时为对方的父节点和子节点–这点是矛盾的。</div>
+		<div>当使用Vue.component将这两个组件注册为全局组件的时候，框架会自动为你解决这个矛盾，如果你是这样做的，就不用继续往下看了。</div>
+		<div>然而，如果你使用诸如Webpack或者Browserify之类的模块化管理工具来requiring/importing组件的话，就会报错了：</div>
+		<p>Failed to mount component: template or render function not defined.</p>
+		<div>为了解释为什么会报错，简单的将上面两个组件称为 A 和 B ，模块系统看到它需要 A ，但是首先 A 需要 B ，但是 B 需要 A， 而 A 需要 B，</div>
+		<div>陷入了一个无限循环，因此不知道到底应该先解决哪个。要解决这个问题，我们需要在其中一个组件中（比如 A ）告诉模块化管理系统，</div>
+		<div>“A 虽然需要 B ，但是不需要优先导入 B” 在我们的例子中，我们选择在tree-folder 组件中来告诉模块化管理系统循环引用的组件间的处理优先级，</div>
+		<div>我们知道引起矛盾的子组件是tree-folder-contents，所以我们在beforeCreate 生命周期钩子中去注册它：</div>
+		<p>beforeCreate: function () { this.$options.components.TreeFolderContents = require('./tree-folder-contents.vue') }
+		</p>
+		<h3>内联模版</h3>
+		<div>如果子组件有 inline-template 特性，组件将把它的内容当作它的模板，而不是把它当作分发内容。这让模板更灵活。</div>
+		<my-component inline-template>
+			<div>
+				<p>These are compiled as the component's own template.</p>
+				<p>Not parent's transclusion content.</p>
+			</div>
+		</my-component>
+		<div>但是 inline-template 让模板的作用域难以理解。最佳实践是使用 template 选项在组件内定义模板或者在 .vue 文件中使用 template 元素。</div>
+		<h3>X-Templates</h3>
+		<div>另一种定义模版的方式是在 JavaScript 标签里使用 text/x-template 类型，并且指定一个id。例如：</div>
+		<script type="text/x-template" id="hello-world-template">
+			<p>Hello hello hello</p>
+		</script>
+		<script>
+			Vue.component('hello-world', {
+				template: '#hello-world-template'
+			});
+		</script>
+		<div>这在有很多模版或者小的应用中有用，否则应该避免使用，因为它将模版和组件的其他定义隔离了。</div>
+		<h3>对低开销的静态组件使用 v-once</h3>
+		<div>尽管在 Vue 中渲染 HTML 很快，不过当组件中包含大量静态内容时，可以考虑使用 v-once 将渲染结果缓存起来，就像这样：</div>
+		<script>
+			Vue.component('terms-of-service', {
+				template: '<div v-once><h1>Terms of Service</h1>... a lot of static content ...</div>'
+			});
+		</script>
+	</body>
+
+</html>
