@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>样式表之继承性</title>
+    <style type="text/css">
+        .father {
+            color: red;
+            font: 40px 微软雅黑;
+        }
+    </style>
+</head>
+<body>
+<h1>继承性发生的前提是包含(嵌套关系)</h1>
+<h1>文字所有属性都可以集成:颜色,大小,字体,粗细,风格,行高</h1>
+<div class="father">
+    <p class="son">你好</p>
+</div>
+<h1>特殊情况,h1-h6标签不能继承文字大小(因为有默认样式)</h1>
+<h1>a标签不会继承文字颜色,有默认样式</h1>
+<div style="font-size: 10px">
+    <h1>特殊情况</h1>
+    <p style="font-size: 20px">特殊情况</p>
+    <h2>特殊情况</h2>
+    <p style="font-size: 15px">特殊情况</p>
+</div>
+</body>
+</html>

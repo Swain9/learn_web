@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>链接伪类</title>
+    <style type="text/css">
+
+        a:link {
+            text-decoration: none;
+            color: red;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: green;
+        }
+
+        a:active {
+            color: pink;
+        }
+    </style>
+</head>
+<body>
+<div>a:link{属性:值;} == a{属性:值;} 链接默认状态</div>
+<div>a:visited{属性:值;} 链接访问之后的状态</div>
+<div>a:hover{属性:值;} 鼠标放到链接上显示的状态</div>
+<div>a:active{属性:值;} 链接激活的状态</div>
+<div>a:focus{属性:值;} 获取焦点</div>
+<a href="#">你好</a>
+<a>他好</a>
+</body>
+</html>

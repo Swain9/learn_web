@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>元素之间的转换</title>
+    <style type="text/css">
+        div, p {
+            display: inline;
+            width: 500px;
+            height: 500px;
+            background-color: red;
+        }
+
+        span {
+            display: block;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>块元素转换行元素后,将失去块元素的特点获得行元素的特点</h1>
+<div>张茂林</div>
+<p>牛批</p>
+
+<h1>行元素转块元素</h1>
+<span>哈哈哈哈</span>
+<span>嘿嘿嘿</span>
+
+<h1>重点:块元素,行元素转行内块元素.拥有两者的特点</h1>
+<div style="display: inline-block">反反复复</div>
+<span style="display: inline-block">啦啦啦啦啦</span>
+<a href="#" style="display: inline-block">急急急</a>
+<strong style="display: inline-block">经济的</strong>
+
+</body>
+</html>

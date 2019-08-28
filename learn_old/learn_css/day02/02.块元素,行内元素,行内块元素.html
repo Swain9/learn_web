@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>标签分类</title>
+    <style type="text/css">
+        div{
+            height: 200px;
+            width: 50px;
+            background-color: red;
+        }
+        p{
+            width: 300px;
+            height: 100px;
+            background-color: #0f0;
+        }
+    </style>
+</head>
+<body>
+<h1>块元素:div,h1-h6,ul,li</h1>
+<h1>特点:独占一行,可以设置宽高,嵌套下,子块元素宽度(没有定义的情况下)</h1>
+<h1>和父块元素宽度一致</h1>
+<div>张茂林</div>
+<p>张茂林</p>
+
+<h1>行内元素:span,a,strong(b),em(i),del(s),ins(u)</h1>
+<h1>特点:在一行上显示,不能直接定义宽高,由内容撑开宽高</h1>
+<h1>元素的宽高和父元素无关</h1>
+<span style="height: 100px;">你好</span><a href="#">你好</a><strong>哈哈</strong>
+<em style="width: 100px">哈哈</em><del>就是这么</del><ins>牛逼</ins>
+<div style="width: 300px"><span>小伙子不错啊</span></div>
+
+<h1>行内块元素(内联元素):input img</h1>
+<h1>特点:在一行上显示,可以设置宽高</h1>
+</body>
+</html>
