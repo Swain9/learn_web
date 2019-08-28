@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title>let和const命令</title>
+</head>
+<body>
+<script>
+    {
+        let a = 1;
+        var b = 2;
+    }
+    console.log(a);//未定义
+    console.log(b);
+</script>
+<script>
+    for (let i = 1; i < 10; i++) {
+        console.log(i);
+    }
+    console.log(i);//未定义
+</script>
+</body>
+</html>
