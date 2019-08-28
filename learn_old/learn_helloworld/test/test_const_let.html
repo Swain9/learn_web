@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>测试</title>
+		<script src="http://at.alicdn.com/t/font_618545_57t4z090cdavpldi.js"></script>
+		<style type="text/css">
+    .icon {
+       width: 1em; height: 1em;
+       vertical-align: -0.15em;
+       fill: currentColor;
+       overflow: hidden;
+    }
+</style>
+		
+	</head>
+
+	<body>
+		<svg class="icon" aria-hidden="true">
+    <use xlink:href="#icon-chuangkou"></use>
+</svg>
+		
+		<input id="str" type="tel" /><br />
+		<input id="num" type="text" disabled="disabled" /><br />
+		<button onclick="count()">计算</button><br />
+		<button onclick="getDate()">计算2</button><br />
+		<input id="txtOrderId" type="text" /><br />
+		<button onclick="getOrder()">计算3</button><br />
+		<button onclick="checkOrderId('100')">计算4</button><br />
+		<button onclick="upcase()">计算5</button><br />
+		<script>
+			function upcase(){
+				alert("djf32Kf3sK".toUpperCase());
+			}
+			
+			function int2AAA(x) {
+				if(x < 0)
+					return "";
+
+				var a = x / 26;
+				var b = x % 26;
+				return int2AAA(a - 1) + String.fromCharCode((b + 'A'.charCodeAt(0)));
+			}
+
+			function checkOrderId(orderId) {
+
+				if(/^\d{1,8}$/.test(orderId)) {
+					var intValue = parseInt(orderId);
+					var x = parseInt(intValue / 100);
+					var y = intValue % 100;
+
+					var s = int2AAA(x);
+					if(y < 10) {
+						s += "0" + y;
+					} else {
+						s += y;
+					}
+					alert(s);
+				}
+			}
+
+			function getOrder() {
+				var value = document.getElementById("txtOrderId").value;
+				if(!value) {
+					return;
+				}
+				var s1 = /^[a-zA-Z]*\d{2}$/;
+				var s2 = /^\d{1,8}$/;
+				var s3 = /^[a-zA-Z]*\d{2}$|^\d{1,8}$/;
+				alert(s1.test(value));
+				alert(s2.test(value));
+				alert(s3.test(value));
+			}
+
+			function getDate() {
+				var date = new Date(1516100065);
+				alert(date.toLocaleString());
+			}
+
+			function aaa2int(value) {
+				return AAA(value, value.length - 1);
+			}
+
+			function AAA(value, end) {
+				var chars = value.split("");
+				var n = chars[end].toUpperCase().charCodeAt(0) - 'A'.charCodeAt(0);
+				if(end === 0) {
+					return n;
+				}
+				return(AAA(value, end - 1) + 1) * 26 + n;
+			}
+
+			function getStr(value) {
+				return value.replace(/[^a-zA-Z]/ig, "");
+			}
+
+			function getInt(value) {
+				return parseInt(value.replace(/[^0-9]/ig, ""));
+			}
+
+			function count() {
+				var strEle = document.getElementById("str");
+				var numEle = document.getElementById("num");
+				var s1 = strEle.value;
+				var strValue = getStr(s1);
+				var intValue = getInt(s1);
+				var s2 = aaa2int(strValue) * 100 + intValue;
+				numEle.value = s1 + "(" + s2 + ")";
+			}
+		</script>
+	</body>
+
+</html>
