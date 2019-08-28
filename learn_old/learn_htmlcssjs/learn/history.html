@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<script>
+		function checkvalue(ss) {
+			if(ss.id == "txt1") {
+				return function() {
+					alert(ss.value);
+				}
+			} else {
+				alert(ss.value);
+			}
+		}
+
+		function init() {
+			var ss = document.getElementById("txt1");
+			ss.onblur = checkvalue(ss)
+			ss.onfocus = checkvalue(ss);
+		}
+	</script>
+
+	<body onload="init()">
+		<input type="text" value="" onblur="checkvalue(this)" />
+		<input id="txt1" type="text" value="444" />
+	</body>
+
+</html>

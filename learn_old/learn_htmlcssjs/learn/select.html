@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="jquery/js/jquery-3.2.1.js" ></script>
+		<style>
+			div {
+				float: left;
+			}
+		</style>
+		<script>
+			function checkToRight() {
+				var left = document.getElementById("slc1");
+				var right = document.getElementById("slc2");
+				for(var i in left.options) {
+					if(left[i].selected) {
+						//						slc1.removeChild(slc1[i]);
+						right.appendChild(left[i]);
+						break;
+					}
+				}
+			}
+
+			function checkAllToRight() {
+				var left = document.getElementById("slc1").options;
+				var right = document.getElementById("slc2");
+				for(var i = 0; i < slc1.length; i++) {
+					if(left[i].selected) {
+						right.appendChild(left[i]);
+						i--;
+					}
+				}
+			}
+
+			function allToRight() {
+				var left = document.getElementById("slc1").options;
+				var right = document.getElementById("slc2");
+				for(var i = 0; i < left.length;) {
+					right.appendChild(left[i]);
+				}
+			}
+
+			function checkToLeft() {
+				var left = document.getElementById("slc1");
+				var right = document.getElementById("slc2");
+				for(var i in right.options) {
+					if(right[i].selected) {
+						//						slc1.removeChild(slc1[i]);
+						left.appendChild(right[i]);
+						break;
+					}
+				}
+			}
+
+			function checkAllToLeft() {
+				var left = document.getElementById("slc1");
+				var right = document.getElementById("slc2").options;
+				for(var i = 0; i < right.length; i++) {
+					if(right[i].selected) {
+						left.appendChild(right[i]);
+						i--;
+					}
+				}
+			}
+
+			function allToLeft() {
+				var left = document.getElementById("slc1");
+				var right = document.getElementById("slc2").options;
+				for(var i = 0; i < right.length;) {
+					left.appendChild(right[i]);
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<div>
+			<select id="slc1" multiple="multiple" style="width: 100px;" size="10">
+				<option>1</option>
+				<option>2</option>
+				<option>3</option>
+				<option>4</option>
+				<option>5</option>
+				<option>6</option>
+				<option>7</option>
+				<option>8</option>
+				<option>9</option>
+				<option>0</option>
+			</select>
+		</div>
+		<div>
+			<div>
+				<button onclick="checkToRight()">&gt;</button> <br />
+				<button onclick="checkAllToRight()">&gt;&gt;</button><br />
+				<button onclick="allToRight()">&gt;&gt;&gt;</button><br />
+				<button onclick="checkToLeft()">&lt;</button><br />
+				<button onclick="checkAllToLeft()">&lt;&lt;</button><br />
+				<button onclick="allToLeft()">&lt;&lt;&lt;</button><br />
+			</div>
+		</div>
+		<div>
+			<select id="slc2" multiple="multiple " style="width: 100px; " size="10 "></select>
+		</div>
+		<script>
+			$("#slc1").val("2").prop("disabled","disabled");
+		</script>
+	</body>
+
+</html>

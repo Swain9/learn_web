@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script>
+			function checkall(ss) {
+				var inputs = document.getElementsByName("chk");
+				for(var i in inputs) {
+					inputs[i].checked = ss.checked;
+				}
+			}
+
+			function incheck() {
+				var inputs = document.getElementsByName("chk");
+				for(var i in inputs) {
+					inputs[i].checked = !inputs[i].checked;
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<table style="border: dashed 1px red;">
+			<th>
+				<td><input type="checkbox" onclick="checkall(this);" /><input type="checkbox" onclick="incheck();" /></td>
+				<td>全选，反选，全部选</td>
+			</th>
+			<tr>
+				<td><input name="chk" type="checkbox" /></td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td><input name="chk" type="checkbox" /></td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td><input name="chk" type="checkbox" /></td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td><input name="chk" type="checkbox" /></td>
+				<td>4</td>
+			</tr>
+			<tr>
+				<td><input name="chk" type="checkbox" /></td>
+				<td>5</td>
+			</tr>
+		</table>
+	</body>
+
+</html>
