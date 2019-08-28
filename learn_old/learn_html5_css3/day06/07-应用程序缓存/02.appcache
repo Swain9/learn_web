@@ -1,0 +1,17 @@
+CACHE MANIFEST
+
+#Ҫ������ļ�
+CACHE:
+    images/img1.jpg
+    images/img2.jpg
+
+
+#ָ�������������ܷ��ʵ��ļ�
+NETWORK:
+     images/img3.jpg
+     images/img4.jpg
+
+
+#��ǰҳ���޷������ǻ��˵�ҳ��
+FALLBACK:
+    404.html
