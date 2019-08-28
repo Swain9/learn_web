@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			.icon {
+				background: url(tabicons.png) no-repeat;
+				width: 18px;
+				height: 18px;
+				display: inline-block;
+			}
+			
+			.icon-select {
+				background-position: 0 -200px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<img src="tabicons.png" />
+		<img id="showimg" src="tabicons.png" class="icon" /><br />
+		<input id="x" type="text" value="0" />
+		<input id="y" type="text" value="0" />
+		<script>
+			window.onload = function() {
+				window.onkeydown = keySelect;
+
+				function keySelect(e) {
+					if(e.keyCode === 38) {
+						keyfn.top();
+					}
+					if(e.keyCode === 40) {
+						keyfn.bottom();
+					}
+					if(e.keyCode === 37) {
+						keyfn.left();
+					}
+					if(e.keyCode === 39) {
+						keyfn.right();
+					}
+				}
+				var keyfn = {
+					xvalue: function() {
+						return document.getElementById("x");
+					},
+					yvalue: function() {
+						return document.getElementById("y");
+					},
+					showimg: function() {
+						return document.getElementById("showimg");
+					},
+					setimg: function(x, y) {
+						this.showimg().style.backgroundPositionX = x;
+						this.showimg().style.backgroundPositionY = y;
+					},
+					top: function() {
+						var y = this.yvalue();
+						var yv = Number(y.value) + 20;
+						if(yv > 0) {
+							yv = 0;
+						}
+						y.value = yv;
+						this.setimg(this.xvalue().value + "px", yv + "px");
+					},
+					bottom: function() {
+						var y = this.yvalue();
+						var yv = Number(y.value) - 20;
+						if(yv < -500) {
+							yv = -500;
+						}
+						y.value = yv;
+						this.setimg(this.xvalue().value + "px", yv + "px");
+
+					},
+					left: function() {
+						var x = this.xvalue();
+						var xv = Number(x.value) + 20;
+						if(xv > 0) {
+							xv = 0
+						}
+						x.value = xv;
+						this.setimg(xv + "px", this.yvalue().value + "px");
+					},
+					right: function() {
+						var x = this.xvalue();
+						var xv = Number(x.value) - 20;
+						if(xv < -380) {
+							xv = -380
+						}
+						x.value = xv;
+						this.setimg(xv + "px", this.yvalue().value + "px");
+
+					}
+				}
+			}
+		</script>
+	</body>
+
+</html>

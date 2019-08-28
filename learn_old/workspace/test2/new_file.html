@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<table border="1" cellspacing="0" cellpadding="5">
+			<tr>
+				<th>工厂方法</th>
+				<th>返回类型</th>
+				<th>用于 </th>
+			</tr>
+			<tr>
+				<td>toList</td>
+				<td>List&lt;T&gt;</td>
+				<td>把流中所有项目收集到一个 List</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：List&lt;Dish&gt; dishes = menuStream.collect(toList());</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>toSet</td>
+				<td>Set&lt;T&gt;</td>
+				<td>把流中所有项目收集到一个 Set，删除重复项</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：Set&lt;Dish&gt; dishes = menuStream.collect(toSet());</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>toCollection</td>
+				<td>Collection&lt;T&gt;</td>
+				<td>把流中所有项目收集到给定的供应源创建的集合</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：Collection&lt;Dish&gt; dishes = menuStream.collect(toCollection(), ArrayList::new); </td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>counting</td>
+				<td>Long</td>
+				<td>计算流中元素的个数</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：long howManyDishes = menuStream.collect(counting());</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>summingInt</td>
+				<td>Integer</td>
+				<td>对流中项目的一个整数属性求和</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：int totalCalories = menuStream.collect(summingInt(Dish::getCalories));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>averagingInt</td>
+				<td>Double</td>
+				<td>计算流中项目 Integer 属性的平均值</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：double avgCalories = menuStream.collect(averagingInt(Dish::getCalories));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>summarizingInt</td>
+				<td>IntSummaryStatistics</td>
+				<td>收集关于流中项目 Integer 属性的统计值，例如最大、最小、总和与平均值</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：IntSummaryStatistics menuStatistics = menuStream.collect(summarizingInt(Dish::getCalories));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>joining</td>
+				<td>String</td>
+				<td>连接对流中每个项目调用 toString 方法所生成的字符串</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：String shortMenu = menuStream.map(Dish::getName).collect(joining(", "));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>maxBy</td>
+				<td>Optional&lt;T&gt;</td>
+				<td>一个包裹了流中按照给定比较器选出的最大元素的 Optional，或如果流为空则为 Optional.empty()</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：Optional&lt;Dish&gt; fattest = menuStream.collect(maxBy(comparingInt(Dish::getCalories)));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>minBy</td>
+				<td>Optional&lt;T&gt;</td>
+				<td>一个包裹了流中按照给定比较器选出的最小元素的 Optional，或如果流为空则为 Optional.empty()</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：Optional&lt;Dish&gt; lightest = menuStream.collect(minBy(comparingInt(Dish::getCalories)));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>reducing</td>
+				<td>归约操作产生的类型</td>
+				<td>从一个作为累加器的初始值开始，利用 BinaryOperator 与流中的元素逐个结合，从而将流归约为单个值</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：int totalCalories = menuStream.collect(reducing(0, Dish::getCalories, Integer::sum));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>collectingAndThen</td>
+				<td>转换函数返回的类型</td>
+				<td>包裹另一个收集器，对其结果应用转换函数</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：int howManyDishes = menuStream.collect(collectingAndThen(toList(), List::size));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>groupingBy</td>
+				<td>Map&lt;K, List&lt;T&gt;&gt;</td>
+				<td>根据项目的一个属性的值对流中的项目作问组，并将属性值作为结果 Map 的键</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：Map&lt;Dish.Type,List&lt;Dish&gt;&gt; dishesByType = menuStream.collect(groupingBy(Dish::getType));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>partitioningBy</td>
+				<td>Map&lt;Boolean,List&lt;T&gt;&gt;</td>
+				<td>根据对流中每个项目应用谓词的结果来对项目进行分区</td>
+			</tr>
+			<tr>
+				<td colspan="3">使用示例：Map<Boolean,List<Dish&gt;&gt; vegetarianDishes = menuStream.collect(partitioningBy(Dish::isVegetarian));</td>
+			</tr>
+			<tr>
+				<td colspan="3"></td>
+			</tr>
+		</table>
+	</body>
+
+</html>
